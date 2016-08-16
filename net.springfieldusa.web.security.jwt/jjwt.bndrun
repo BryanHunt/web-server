@@ -14,7 +14,7 @@
 	org.apache.felix.log,\
 	org.apache.felix.metatype,\
 	org.apache.felix.scr,\
-	org.apache.felix.webconsole,\
+	org.apache.felix.webconsole;version=4.2.14,\
 	org.apache.felix.eventadmin,\
 	org.mongodb.mongo-java-driver;version=3.1.1,\
 	org.eclipselabs.emeta.api,\
@@ -22,7 +22,7 @@
 	org.eclipselabs.emongo.components,\
 	org.eclipselabs.emongo.metatype.api,\
 	org.eclipselabs.emongo.metatype.components,\
-	javax.servlet,\
+	javax.servlet;version=3.1,\
 	com.eclipsesource.jaxrs.jersey-all,\
 	com.eclipsesource.jaxrs.provider.security,\
 	com.eclipsesource.jaxrs.publisher,\
