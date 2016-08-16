@@ -16,5 +16,5 @@
 javac.source: 1.8
 javac.target: 1.8
 
-Bundle-Version: 1.0.1.${tstamp}
+Bundle-Version: 1.0.0.${tstamp}
 Export-Package: net.springfieldusa.web.storage.test.utils
