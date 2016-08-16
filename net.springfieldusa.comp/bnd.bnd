@@ -1,0 +1,9 @@
+Bundle-Version: 1.0.0.${tstamp}
+-buildpath: \
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	osgi.core;version=6.0
+Export-Package:  \
+	net.springfieldusa.comp
+-dsannotations:  \
+	*

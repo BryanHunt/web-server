@@ -1,0 +1,20 @@
+-buildpath: \
+	net.springfieldusa.web.json;version=latest,\
+	net.springfieldusa.storage.api;version=latest,\
+	net.springfieldusa.data.api;version=latest,\
+	net.springfieldusa.entity.api;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	net.springfieldusa.web;version=latest,\
+	javax.ws.rs-api;version=2.0,\
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	com.eclipsesource.jaxrs.swagger-all;version=1.5,\
+	com.eclipsesource.jaxrs.provider.security;version=2.2
+
+-testpath: \
+	${junit}
+
+Bundle-Version: 1.0.0.${tstamp}
+Private-Package: net.springfieldusa.web.storage
+-dsannotations: *
+-dsannotations-options: inherit

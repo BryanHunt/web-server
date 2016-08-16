@@ -1,0 +1,6 @@
+-buildpath: \
+	net.springfieldusa.credentials.api;version=latest,\
+	osgi.annotation;version=6.0
+-dsannotations: *
+Bundle-Version: 1.0.0.${tstamp}
+Export-Package: net.springfieldusa.session

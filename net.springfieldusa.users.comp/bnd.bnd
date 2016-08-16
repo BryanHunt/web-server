@@ -1,0 +1,16 @@
+-buildpath: \
+	osgi.annotation;version=6.0.1,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	net.springfieldusa.entity.api;version=latest,\
+	net.springfieldusa.users.api;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	net.springfieldusa.storage.api;version=latest
+
+-testpath: \
+	${junit}
+
+Bundle-Version: 1.0.0.${tstamp}
+Private-Package: net.springfieldusa.users.comp
+-dsannotations: *
+-dsannotations-options: inherit

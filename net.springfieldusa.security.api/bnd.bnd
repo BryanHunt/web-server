@@ -1,0 +1,9 @@
+Bundle-Version: 1.0.0.${tstamp}
+Export-Package: \
+	net.springfieldusa.security,\
+	net.springfieldusa.security.metatype
+-buildpath: \
+	net.springfieldusa.credentials.api;version=latest,\
+	osgi.annotation;version=6.0,\
+	org.eclipselabs.emeta.api;version=1.0,\
+	osgi.cmpn;version=6.0

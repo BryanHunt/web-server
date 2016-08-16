@@ -1,0 +1,5 @@
+Bundle-Version: 1.0.0.${tstamp}
+Export-Package: net.springfieldusa.users
+-buildpath: \
+	net.springfieldusa.entity.api;version=latest,\
+	osgi.annotation;version=6.0

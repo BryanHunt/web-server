@@ -1,0 +1,12 @@
+Bundle-Version: 1.0.0.${tstamp}
+-buildpath: \
+	com.eclipsesource.jaxrs.jersey-all,\
+	com.fasterxml.jackson.core.jackson-core,\
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	osgi.core;version=6.0
+-dsannotations:  \
+	*
+Private-Package: net.springfieldusa.web.json
+Bundle-Activator: net.springfieldusa.web.json.Activator
+Export-Package: net.springfieldusa.web.json.api

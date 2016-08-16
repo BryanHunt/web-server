@@ -1,0 +1,12 @@
+-buildpath: \
+	net.springfieldusa.credentials.api;version=latest,\
+	net.springfieldusa.session.api;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	javax.ws.rs-api;version=2.0,\
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	net.springfieldusa.web;version=latest
+-dsannotations: *
+-dsannotations-options: inherit
+Bundle-Version: 1.0.0.${tstamp}
+Private-Package: net.springfieldusa.web.session

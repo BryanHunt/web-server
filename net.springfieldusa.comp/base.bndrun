@@ -1,0 +1,18 @@
+-runsystemcapabilities: ${native_capability}
+
+-resolve.effective: active;skip:="osgi.service"
+
+-runfw: org.apache.felix.framework;version='[4,5)'
+-runee: JavaSE-1.8
+-runbundles: \
+	org.apache.felix.gogo.command,\
+	org.apache.felix.gogo.runtime,\
+	org.apache.felix.gogo.shell,\
+	org.apache.felix.configadmin,\
+	org.apache.felix.http.jetty,\
+	org.apache.felix.log,\
+	org.apache.felix.metatype,\
+	org.apache.felix.scr,\
+	org.apache.felix.webconsole,\
+	javax.servlet-api
+-runproperties: org.osgi.service.http.port=8080

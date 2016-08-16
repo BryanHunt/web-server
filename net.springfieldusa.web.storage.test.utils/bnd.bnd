@@ -1,0 +1,20 @@
+# Build dependencies 
+-buildpath: \
+	${junit}, \
+	osgi.annotation;version=6.0.1,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	javax.ws.rs-api;version=2.0,\
+	org.eclipselabs.eunit.junit.utils;version=3.0,\
+	org.eclipselabs.emongo.api;version=2.0,\
+	org.eclipselabs.emongo.junit.util;version=3.0,\
+	net.springfieldusa.data.api;version=latest,\
+	net.springfieldusa.entity.api;version=latest,\
+	net.springfieldusa.web.json;version=latest,\
+	com.eclipsesource.jaxrs.jersey-all;version=2.22
+
+javac.source: 1.8
+javac.target: 1.8
+
+Bundle-Version: 1.0.1.${tstamp}
+Export-Package: net.springfieldusa.web.storage.test.utils

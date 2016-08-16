@@ -1,0 +1,13 @@
+Bundle-Version: 1.0.0.${tstamp}
+-buildpath: \
+	net.springfieldusa.password.api;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0
+-testpath: \
+	${junit}
+
+Private-Package:  \
+	net.springfieldusa.password.comp
+-dsannotations: *
+-dsannotations-options: inherit

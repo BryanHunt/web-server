@@ -1,0 +1,6 @@
+Bundle-Version: 1.0.0.${tstamp}
+-buildpath: \
+	net.springfieldusa.users.api;version=latest,\
+	osgi.annotation;version=6.0
+Export-Package:  \
+	net.springfieldusa.registration

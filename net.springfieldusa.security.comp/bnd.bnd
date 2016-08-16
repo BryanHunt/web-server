@@ -1,0 +1,16 @@
+Bundle-Version: 1.0.0.${tstamp}
+-buildpath: \
+	net.springfieldusa.security.api;version=latest,\
+	net.springfieldusa.credentials.api;version=latest,\
+	net.springfieldusa.password.api;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	net.springfieldusa.groups.api;version=latest,\
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	net.springfieldusa.entity.api;version=latest
+-testpath: \
+	${junit}
+
+Private-Package: net.springfieldusa.security.comp
+-dsannotations: *
+-dsannotations-options: inherit

@@ -1,0 +1,14 @@
+-buildpath: \
+	net.springfieldusa.groups.api;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	net.springfieldusa.storage.api;version=latest,\
+	net.springfieldusa.entity.api;version=latest,\
+	osgi.annotation;version=6.0,\
+	osgi.cmpn;version=6.0
+-testpath: \
+	${junit}
+
+-dsannotations: *
+-dsannotations-options: inherit
+Bundle-Version: 1.0.0.${tstamp}
+Private-Package: net.springfieldusa.groups.comp
