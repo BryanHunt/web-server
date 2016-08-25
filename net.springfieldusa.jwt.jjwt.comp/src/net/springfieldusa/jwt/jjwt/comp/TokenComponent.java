@@ -55,6 +55,9 @@ public class TokenComponent extends AbstractComponent implements TokenService
   @Override
   public String createToken(UnencryptedCredential credentials) throws TokenException
   {
+    if(credentials == null)
+      return null;
+    
     try
     {
       Principal principal = securityService.authenticate(credentials);
