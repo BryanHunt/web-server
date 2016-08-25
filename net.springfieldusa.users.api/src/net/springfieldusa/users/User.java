@@ -11,13 +11,9 @@
 
 package net.springfieldusa.users;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import net.springfieldusa.entity.EntityObject;
 
@@ -29,7 +25,6 @@ public class User extends EntityObject
   public static final String KEY_LAST_NAME = "lastName";
   public static final String KEY_PASSWORD = "password";
   public static final String KEY_CREATED_ON = "createdOn";
-  public static final String KEY_META_APPLICATIONS = "applications";
 
   public User()
   {
@@ -59,33 +54,6 @@ public class User extends EntityObject
     put(KEY_EMAIL, email);
   }
 
-  public Set<String> getApplications()
-  {
-    Collection<String> applications = getRawApplications();
-    return applications != null ? new HashSet<>(applications) : Collections.emptySet();
-  }
-
-  public void addApplication(String application)
-  {
-    Collection<String> applications = getRawApplications();
-    
-    if(applications == null)
-    {
-      applications = new ArrayList<>();
-      putMetaObject(KEY_META_APPLICATIONS, applications);
-    }
-    
-    applications.add(application);
-  }
-  
-  public void removeApplication(String application)
-  {
-    Collection<String> applications = getRawApplications();
-
-    if(applications != null)
-      applications.remove(application);
-  }
-  
   public String getEmail()
   {
     return get(KEY_EMAIL).toString();
@@ -119,12 +87,5 @@ public class User extends EntityObject
   public void setCreatedOn(Date createdOn)
   {
     put(KEY_CREATED_ON, createdOn);
-  }
-
-  @SuppressWarnings("unchecked")
-  private Collection<String> getRawApplications()
-  {
-    Collection<String> applications = (Collection<String>) getMetaObject(KEY_META_APPLICATIONS);
-    return applications;
   }
 }
