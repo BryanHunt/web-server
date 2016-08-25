@@ -1,7 +1,6 @@
 package net.springfieldusa.app.accounts.users;
 
 import java.security.Principal;
-import java.util.Collection;
 import java.util.Date;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,7 +28,6 @@ public class UsersProcessor extends AbstractComponent implements DataProcessor
   {
     User user = new User(data);
     String password = user.clearPassword();
-    user.getMeta().remove(User.KEY_META_APPLICATIONS);
     
     try
     {
@@ -44,18 +42,6 @@ public class UsersProcessor extends AbstractComponent implements DataProcessor
       log(LogService.LOG_ERROR, "Failed to add user", e);
       throw new ApplicationException(e);
     }
-  }
-
-  @Override
-  public <T extends EntityObject> T handleRetrieve(Principal principal, T data) throws ApplicationException
-  {
-    return data;
-  }
-
-  @Override
-  public <T extends EntityObject> Collection<T> handleRetrieve(Principal principal, Collection<T> data) throws ApplicationException
-  {
-    return data;
   }
 
   @Override

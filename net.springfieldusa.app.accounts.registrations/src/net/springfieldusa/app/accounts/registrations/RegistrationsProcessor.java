@@ -1,7 +1,6 @@
 package net.springfieldusa.app.accounts.registrations;
 
 import java.security.Principal;
-import java.util.Collection;
 import java.util.Date;
 
 import org.osgi.service.component.annotations.Component;
@@ -56,18 +55,6 @@ public class RegistrationsProcessor extends AbstractComponent implements DataPro
   }
 
   @Override
-  public <T extends EntityObject> T handleRetrieve(Principal principal, T data) throws ApplicationException
-  {
-    return data;
-  }
-
-  @Override
-  public <T extends EntityObject> Collection<T> handleRetrieve(Principal principal, Collection<T> data) throws ApplicationException
-  {
-    return data;
-  }
-
-  @Override
   public <T extends EntityObject> T handleUpdate(Principal principal, T data) throws ApplicationException
   {
     throw new ApplicationException("Updating a registration is not allowed");
@@ -77,16 +64,6 @@ public class RegistrationsProcessor extends AbstractComponent implements DataPro
   public <T extends EntityObject> T handlePatch(Principal principal, T data) throws ApplicationException
   {
     return handleUpdate(principal, data);
-  }
-
-  @Override
-  public <T extends EntityObject> void handleDelete(Principal principal, String id) throws ApplicationException
-  {
-  }
-
-  @Override
-  public <T extends EntityObject> void handleDelete(Principal principal, String key, String value) throws ApplicationException
-  {
   }
 
   @Reference(unbind = "-")
