@@ -71,7 +71,6 @@ import net.springfieldusa.web.json.api.JsonApiRelationshipCollectionWrapper;
 import net.springfieldusa.web.json.api.JsonApiRelationshipWrapper;
 
 @Api(value = "storage")
-@SwaggerDefinition(basePath = "/api")
 @Path("/storage/{collection}")
 @Consumes("application/vnd.api+json")
 @Produces("application/vnd.api+json")

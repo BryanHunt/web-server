@@ -37,7 +37,6 @@ import net.springfieldusa.web.WebResource;
 
 @Path("/auth")
 @Api(value = "auth")
-@SwaggerDefinition(basePath = "/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Component(service = TokenResource.class)
