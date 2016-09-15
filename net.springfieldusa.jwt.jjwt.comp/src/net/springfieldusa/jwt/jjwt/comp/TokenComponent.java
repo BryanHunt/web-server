@@ -58,7 +58,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
 
   private volatile SecurityService securityService;
   private volatile EncryptionSecretProvider secretProvider;
-  private volatile Set<ClaimsProvider> claimsProviders = new CopyOnWriteArraySet<>();
+  private Set<ClaimsProvider> claimsProviders = new CopyOnWriteArraySet<>();
   private Key key;
 
   @Activate
