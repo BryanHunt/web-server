@@ -13,6 +13,7 @@ package net.springfieldusa.web.jwt;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotAuthorizedException;
@@ -48,11 +49,11 @@ public class TokenResource extends WebResource
   @POST
   @ApiOperation(value = "Create an authentication token")
   @ApiResponses(value = { @ApiResponse(code = 401, message = "Credentials were invalid") })
-  public Token createToken(@Context ContainerRequestContext context, UnencryptedCredential credentials)
+  public Token createToken(@Context ContainerRequestContext context, @Context HttpServletRequest request, UnencryptedCredential credentials)
   {
     try
     {
-      String token = tokenService.createToken(context, credentials);
+      String token = tokenService.createToken(context, request, credentials);
 
       if (token == null)
         throw new NotAuthorizedException("Token");

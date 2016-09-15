@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 
 import org.osgi.service.component.annotations.Activate;
@@ -55,7 +56,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
   }
 
   @Override
-  public String createToken(ContainerRequestContext context, UnencryptedCredential credentials) throws TokenException
+  public String createToken(ContainerRequestContext context, HttpServletRequest request, UnencryptedCredential credentials) throws TokenException
   {
     if(credentials == null)
       return null;

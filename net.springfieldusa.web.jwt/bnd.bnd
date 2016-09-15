@@ -6,7 +6,8 @@
 	net.springfieldusa.credentials.api;version=latest,\
 	osgi.annotation;version=6.0,\
 	javax.ws.rs-api;version=2.0,\
-	com.eclipsesource.jaxrs.swagger-all;version=1.5
+	com.eclipsesource.jaxrs.swagger-all;version=1.5,\
+	javax.servlet;version=3.1
 
 -testpath: \
 	${junit}

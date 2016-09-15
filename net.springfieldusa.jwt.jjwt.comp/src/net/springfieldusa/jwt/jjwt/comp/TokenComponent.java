@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 
 import org.osgi.service.component.annotations.Activate;
@@ -73,7 +74,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
   }
 
   @Override
-  public String createToken(ContainerRequestContext context, UnencryptedCredential credentials) throws TokenException
+  public String createToken(ContainerRequestContext context, HttpServletRequest request, UnencryptedCredential credentials) throws TokenException
   {
     if(credentials == null)
       return null;
@@ -90,7 +91,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
       claims.put("exp", Instant.now().plus(tokenExpirationAmount, tokenExpirationUnit).getEpochSecond());
       
       for(ClaimsProvider claimsProvider : claimsProviders)
-        claimsProvider.addClaims(claims, context, principal);
+        claimsProvider.addClaims(claims, context, request, principal);
       
       return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, key).compact();
     }

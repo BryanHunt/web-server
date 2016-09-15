@@ -56,7 +56,7 @@ public class TestTokenComponent
     when(securityService.authenticate(credentials)).thenReturn(principal);
     when(principal.getName()).thenReturn("junit");
     
-    assertThat(tokenComponent.createToken(null, credentials), is(notNullValue()));
+    assertThat(tokenComponent.createToken(null, null, credentials), is(notNullValue()));
   }
 
   @Test
@@ -66,7 +66,7 @@ public class TestTokenComponent
 
     when(securityService.authenticate(credentials)).thenReturn(null);
     
-    assertThat(tokenComponent.createToken(null, credentials), is(nullValue()));
+    assertThat(tokenComponent.createToken(null, null, credentials), is(nullValue()));
   }
 
   @Test(expected = TokenException.class)
@@ -76,7 +76,7 @@ public class TestTokenComponent
 
     when(securityService.authenticate(credentials)).thenThrow(new SecurityException());
     
-    tokenComponent.createToken(null, credentials);
+    tokenComponent.createToken(null, null, credentials);
   }
 
   @Test
@@ -87,7 +87,7 @@ public class TestTokenComponent
     when(securityService.authenticate(credentials)).thenReturn(principal);
     when(principal.getName()).thenReturn("junit");
     
-    String token = tokenComponent.createToken(null, credentials);
+    String token = tokenComponent.createToken(null, null, credentials);
     Map<String, Object> attributes = tokenComponent.verifyToken(token);
     
     assertThat(attributes, hasEntry("userId", "junit"));
