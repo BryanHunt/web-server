@@ -13,13 +13,21 @@ package net.springfieldusa.jwt.jjwt.comp;
 
 import java.security.Key;
 import java.security.Principal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.ws.rs.container.ContainerRequestContext;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.log.LogService;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -39,21 +47,33 @@ import net.springfieldusa.security.SecurityService;
 @Component(service = TokenService.class)
 public class TokenComponent extends AbstractComponent implements TokenService
 {
+  public @interface Config
+  {
+    long tokenExpirationAmount() default 1;
+    String tokenExpirationUnit() default "DAYS";
+  }
+ 
+  private long tokenExpirationAmount;
+  private ChronoUnit tokenExpirationUnit;
+
   private volatile SecurityService securityService;
   private volatile EncryptionSecretProvider secretProvider;
-  private volatile ClaimsProvider claimsProvider;
+  private volatile Set<ClaimsProvider> claimsProviders = new CopyOnWriteArraySet<>();
   private Key key;
 
   @Activate
-  public void activate()
+  public void activate(Config config)
   {
+    tokenExpirationAmount = config.tokenExpirationAmount();
+    tokenExpirationUnit = ChronoUnit.valueOf(config.tokenExpirationUnit());
+
     byte[] keyData = new byte[64];
     System.arraycopy(secretProvider.getSecret().getBytes(), 0, keyData, 0, secretProvider.getSecret().getBytes().length);
     key = new SecretKeySpec(keyData, SignatureAlgorithm.HS512.getJcaName());
   }
 
   @Override
-  public String createToken(UnencryptedCredential credentials) throws TokenException
+  public String createToken(ContainerRequestContext context, UnencryptedCredential credentials) throws TokenException
   {
     if(credentials == null)
       return null;
@@ -65,7 +85,14 @@ public class TokenComponent extends AbstractComponent implements TokenService
       if (principal == null)
         return null;
 
-      return Jwts.builder().setClaims(claimsProvider.getClaims(principal)).signWith(SignatureAlgorithm.HS512, key).compact();
+      Map<String, Object> claims = new HashMap<>();
+      claims.put("userId", principal.getName());
+      claims.put("exp", Instant.now().plus(tokenExpirationAmount, tokenExpirationUnit).getEpochSecond());
+      
+      for(ClaimsProvider claimsProvider : claimsProviders)
+        claimsProvider.addClaims(claims, context, principal);
+      
+      return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, key).compact();
     }
     catch (SecurityException e)
     {
@@ -102,9 +129,14 @@ public class TokenComponent extends AbstractComponent implements TokenService
     this.secretProvider = secretProvider;
   }
   
-  @Reference(unbind = "-")
+  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
   public void bindClaimsProvider(ClaimsProvider claimsProvider)
   {
-    this.claimsProvider = claimsProvider;
+    claimsProviders.add(claimsProvider);
+  }
+  
+  public void unbindClaimsProvider(ClaimsProvider claimsProvider)
+  {
+    claimsProviders.remove(claimsProvider);
   }
 }

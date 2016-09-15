@@ -6,7 +6,8 @@
 	net.springfieldusa.comp;version=latest,\
 	net.springfieldusa.credentials.api;version=latest,\
 	net.springfieldusa.security.api;version=latest,\
-	io.jsonwebtoken.jjwt;version=0.6
+	io.jsonwebtoken.jjwt;version=0.6,\
+	javax.ws.rs-api;version=2.0
 
 -testpath: \
 	${junit}, \

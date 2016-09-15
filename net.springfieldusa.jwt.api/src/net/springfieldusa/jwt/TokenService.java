@@ -13,10 +13,12 @@ package net.springfieldusa.jwt;
 
 import java.util.Map;
 
+import javax.ws.rs.container.ContainerRequestContext;
+
 import net.springfieldusa.credentials.UnencryptedCredential;
 
 public interface TokenService
 {
-  String createToken(UnencryptedCredential credentials) throws TokenException;
+  String createToken(ContainerRequestContext context, UnencryptedCredential credentials) throws TokenException;
   Map<String, Object> verifyToken(String token) throws TokenException;
 }

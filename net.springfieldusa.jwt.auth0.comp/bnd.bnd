@@ -5,7 +5,8 @@
 	net.springfieldusa.security.api;version=latest,\
 	net.springfieldusa.comp;version=latest,\
 	osgi.annotation;version=6.0,\
-	osgi.cmpn;version=6.0
+	osgi.cmpn;version=6.0,\
+	javax.ws.rs-api;version=2.0
 -dsannotations: *
 -dsannotations-options: inherit
 Bundle-Version: 1.0.0.${tstamp}

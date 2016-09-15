@@ -20,6 +20,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.osgi.service.component.annotations.Component;
@@ -30,7 +32,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.SwaggerDefinition;
 import net.springfieldusa.credentials.UnencryptedCredential;
 import net.springfieldusa.jwt.TokenService;
 import net.springfieldusa.web.WebResource;
@@ -47,11 +48,11 @@ public class TokenResource extends WebResource
   @POST
   @ApiOperation(value = "Create an authentication token")
   @ApiResponses(value = { @ApiResponse(code = 401, message = "Credentials were invalid") })
-  public Token createToken(UnencryptedCredential credentials)
+  public Token createToken(@Context ContainerRequestContext context, UnencryptedCredential credentials)
   {
     try
     {
-      String token = tokenService.createToken(credentials);
+      String token = tokenService.createToken(context, credentials);
 
       if (token == null)
         throw new NotAuthorizedException("Token");
