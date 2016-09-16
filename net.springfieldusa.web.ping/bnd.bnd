@@ -1,0 +1,15 @@
+-buildpath: \
+	osgi.annotation;version=6.0.1,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	javax.ws.rs-api;version=2.0,\
+	com.eclipsesource.jaxrs.swagger-all;version=1.5
+
+-testpath: \
+	${junit}
+
+javac.source: 1.8
+javac.target: 1.8
+
+Bundle-Version: 1.0.0.${tstamp}
+Private-Package: net.springfieldusa.web.ping
