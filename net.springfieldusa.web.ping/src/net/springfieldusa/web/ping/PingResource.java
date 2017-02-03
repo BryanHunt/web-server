@@ -13,6 +13,7 @@ package net.springfieldusa.web.ping;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import org.osgi.service.component.annotations.*;
 
@@ -21,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "ping")
 @Path("/ping")
+@Produces("text/plain")
 @Component(service = PingResource.class)
 public class PingResource
 {
