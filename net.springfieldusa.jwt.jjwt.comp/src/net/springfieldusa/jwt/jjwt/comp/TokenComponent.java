@@ -41,6 +41,7 @@ import net.springfieldusa.credentials.UnencryptedCredential;
 import net.springfieldusa.jwt.ClaimsProvider;
 import net.springfieldusa.jwt.EncryptionSecretProvider;
 import net.springfieldusa.jwt.TokenException;
+import net.springfieldusa.jwt.TokenExpiredException;
 import net.springfieldusa.jwt.TokenService;
 import net.springfieldusa.security.SecurityException;
 import net.springfieldusa.security.SecurityService;
@@ -111,9 +112,14 @@ public class TokenComponent extends AbstractComponent implements TokenService
     {
       return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
-    catch (ExpiredJwtException | io.jsonwebtoken.SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e)
+    catch (ExpiredJwtException e)
     {
-      log(LogService.LOG_DEBUG, "JWT token verification exception", e);
+      log(LogService.LOG_DEBUG, "JWT token expired exception", e);
+      throw new TokenExpiredException(e);
+    }
+    catch (io.jsonwebtoken.SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e)
+    {
+      log(LogService.LOG_DEBUG, "JWT token exception", e);
       throw new TokenException(e);
     }
   }

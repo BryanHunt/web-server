@@ -26,6 +26,7 @@ import com.eclipsesource.jaxrs.provider.security.AuthorizationHandler;
 
 import net.springfieldusa.credentials.AuthenticatedUser;
 import net.springfieldusa.jwt.TokenException;
+import net.springfieldusa.jwt.TokenExpiredException;
 import net.springfieldusa.jwt.TokenService;
 import net.springfieldusa.security.SecurityException;
 import net.springfieldusa.security.SecurityService;
@@ -71,6 +72,10 @@ public class SecurityHandler implements AuthenticationHandler, AuthorizationHand
         return null;
 
       return new AuthenticatedUser((String) claims.get("userId"), (Collection<String>) claims.get("roles"));
+    }
+    catch (TokenExpiredException e)
+    {
+      return null;
     }
     catch (TokenException e)
     {
