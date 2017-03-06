@@ -11,25 +11,31 @@
 
 package net.springfieldusa.web.ping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.osgi.service.component.annotations.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.springfieldusa.web.WebResource;
 
 @Api(value = "ping")
 @Path("/ping")
 @Produces("text/plain")
 @Component(service = PingResource.class)
-public class PingResource
+public class PingResource extends WebResource
 {
   @GET
   @ApiOperation(value = "Endpoint to check server health")
-  public String ping()
+  public String ping(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo)
   {
+    recordGet(request, uriInfo, securityContext.getUserPrincipal());
     return "Hello";
   }
 }

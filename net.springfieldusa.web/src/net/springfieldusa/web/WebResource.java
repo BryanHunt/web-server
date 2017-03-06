@@ -14,6 +14,7 @@ package net.springfieldusa.web;
 import java.security.Principal;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.service.component.annotations.Reference;
@@ -37,53 +38,53 @@ public abstract class WebResource extends AbstractComponent
     usageLogServiceReference.compareAndSet(webResourceUsageLogService, null);
   }
 
-  protected void recordPost(UriInfo uri, Principal user)
+  protected void recordPost(HttpServletRequest request, UriInfo uri, Principal user)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordPost(uri, user);
+    usageLogService.recordPost(request, uri, user);
   }
   
-  protected void recordGet(UriInfo uri, Principal user)
+  protected void recordGet(HttpServletRequest request, UriInfo uri, Principal user)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordGet(uri, user);    
+    usageLogService.recordGet(request, uri, user);    
   }
   
-  protected void recordPut(UriInfo uri, Principal user)
+  protected void recordPut(HttpServletRequest request, UriInfo uri, Principal user)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordPut(uri, user);
+    usageLogService.recordPut(request, uri, user);
   }
   
-  protected void recordPatch(UriInfo uri, Principal user)
+  protected void recordPatch(HttpServletRequest request, UriInfo uri, Principal user)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordPatch(uri, user);
+    usageLogService.recordPatch(request, uri, user);
   }
   
-  protected void recordDelete(UriInfo uri, Principal user)
+  protected void recordDelete(HttpServletRequest request, UriInfo uri, Principal user)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordDelete(uri, user);
+    usageLogService.recordDelete(request, uri, user);
   }
 }

@@ -13,13 +13,14 @@ package net.springfieldusa.web;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.UriInfo;
 
 public interface WebResourceUsageLogService
 {
-  void recordPost(UriInfo uri, Principal user);
-  void recordGet(UriInfo uri, Principal user);
-  void recordPut(UriInfo uri, Principal user);
-  void recordPatch(UriInfo uri, Principal user);
-  void recordDelete(UriInfo uri, Principal user);
+  void recordPost(HttpServletRequest request, UriInfo uri, Principal user);
+  void recordGet(HttpServletRequest request, UriInfo uri, Principal user);
+  void recordPut(HttpServletRequest request, UriInfo uri, Principal user);
+  void recordPatch(HttpServletRequest request, UriInfo uri, Principal user);
+  void recordDelete(HttpServletRequest request, UriInfo uri, Principal user);
 }

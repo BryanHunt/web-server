@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -54,7 +55,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.SwaggerDefinition;
 import net.springfieldusa.data.ApplicationDataService;
 import net.springfieldusa.data.AuthorizationException;
 import net.springfieldusa.entity.EntityObject;
@@ -95,7 +95,7 @@ public class StorageResource extends WebResource
                           @ApiResponse(code = 401, message = "Authentication is required"),
                           @ApiResponse(code = 409, message = "A document with the supplied id already exists in the database"),
                           @ApiResponse(code = 403, message = "You are not authorized to create the document") })
-  public Response createResource(@Context UriInfo uriInfo, @Context SecurityContext securityContext, 
+  public Response createResource(@Context HttpServletRequest request, @Context UriInfo uriInfo, @Context SecurityContext securityContext,
       @ApiParam(value = "the database collection in which to store the document", required = true) @PathParam("collection") String collection,
       @ApiParam(value = "the document to store", required = true) JsonApiDataWrapper resource)
   {
@@ -108,7 +108,7 @@ public class StorageResource extends WebResource
 
       // --- Business Logic ------------------------------------------------------------------------
       
-      recordPost(uriInfo, securityContext.getUserPrincipal());
+      recordPost(request, uriInfo, securityContext.getUserPrincipal());
       EntityObject entity = new EntityObject((String) resource.getData().getId(), resource.getData().camelizedAttributes(), decodeRelationships(resource), resource.getMeta());
 
       entity = applicationDataService.create(securityContext.getUserPrincipal(), collection, entity);
@@ -141,7 +141,7 @@ public class StorageResource extends WebResource
   @ApiOperation(value = "Query and retrieve documents from the database", notes = "The skip and offset parameters have the same function and only one needs to be specified if you want to skip documents.  If both skip and offset are specified, skip has precedence.")
   @ApiResponses(value = { @ApiResponse(code = 401, message = "Authentication is required"),
                           @ApiResponse(code = 403, message = "You are not authorized to retrieve the documents") })  
-  public JsonApiDataCollectionWrapper retrieveResources(@Context SecurityContext securityContext, @Context UriInfo uriInfo, 
+  public JsonApiDataCollectionWrapper retrieveResources(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo, 
       @ApiParam(value = "the database collection to query for the documents", required = true) @PathParam("collection") String collection,
       @ApiParam(value = "the number of documents to skip", required = false) @QueryParam("skip") Integer skip, 
       @ApiParam(value = "the number of documents to skip", required = false) @QueryParam("offset") Integer offset, 
@@ -157,7 +157,7 @@ public class StorageResource extends WebResource
 
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordGet(uriInfo, securityContext.getUserPrincipal());
+      recordGet(request, uriInfo, securityContext.getUserPrincipal());
 
       if (skip == null)
         skip = offset != null ? offset : 0;
@@ -220,7 +220,7 @@ public class StorageResource extends WebResource
   @ApiResponses(value = { @ApiResponse(code = 401, message = "Authentication is required"),
                           @ApiResponse(code = 403, message = "You are not authorized to retrieve the document"), 
                           @ApiResponse(code = 404, message = "The document with the specified id was not found in the database") })  
-  public JsonApiDataWrapper retrieveResource(@Context SecurityContext securityContext, @Context UriInfo uriInfo, 
+  public JsonApiDataWrapper retrieveResource(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo, 
       @ApiParam(value = "the database collection from wich to retrieve the document", required = true) @PathParam("collection") String collection,
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id)
   {
@@ -233,7 +233,7 @@ public class StorageResource extends WebResource
 
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordGet(uriInfo, securityContext.getUserPrincipal());
+      recordGet(request, uriInfo, securityContext.getUserPrincipal());
 
       EntityObject entity = applicationDataService.retrieve(securityContext.getUserPrincipal(), collection, id);
 
@@ -266,7 +266,7 @@ public class StorageResource extends WebResource
                           @ApiResponse(code = 401, message = "Authentication is required"),
                           @ApiResponse(code = 403, message = "You are not authorized to update the document"), 
                           @ApiResponse(code = 404, message = "The document with the specified id was not found in the database") })  
-  public Response updateResource(@Context SecurityContext securityContext, @Context UriInfo uriInfo, 
+  public Response updateResource(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo, 
       @ApiParam(value = "the database collection containing the document to update", required = true) @PathParam("collection") String collection,
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id, 
       @ApiParam(value = "the document to store", required = true) JsonApiDataWrapper resource)
@@ -280,7 +280,7 @@ public class StorageResource extends WebResource
 
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordPut(uriInfo, securityContext.getUserPrincipal());
+      recordPut(request, uriInfo, securityContext.getUserPrincipal());
 
       EntityObject entity = new EntityObject(id, resource.getData().camelizedAttributes(), decodeRelationships(resource), resource.getMeta());
 
@@ -311,7 +311,7 @@ public class StorageResource extends WebResource
                           @ApiResponse(code = 401, message = "Authentication is required"),
                           @ApiResponse(code = 403, message = "You are not authorized to update the document"), 
                           @ApiResponse(code = 404, message = "The document with the specified id was not found in the database") })  
-  public Response patchResource(@Context SecurityContext securityContext, @Context UriInfo uriInfo, 
+  public Response patchResource(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo, 
       @ApiParam(value = "the database collection containing the document to update") @PathParam("collection") String collection,
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id, 
       @ApiParam(value = "the document attributes to update", required = true) JsonApiDataWrapper resource)
@@ -326,7 +326,7 @@ public class StorageResource extends WebResource
 
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordPatch(uriInfo, securityContext.getUserPrincipal());
+      recordPatch(request, uriInfo, securityContext.getUserPrincipal());
       
       EntityObject entity = new EntityObject(id, resource.getData().camelizedAttributes(), decodeRelationships(resource), resource.getMeta());
       
@@ -357,7 +357,7 @@ public class StorageResource extends WebResource
                           @ApiResponse(code = 401, message = "Authentication is required"),
                           @ApiResponse(code = 403, message = "You are not authorized to delete the document"), 
                           @ApiResponse(code = 404, message = "The document with the specified id was not found in the database") })  
-  public Response deleteResource(@Context SecurityContext securityContext, @Context UriInfo uriInfo, 
+  public Response deleteResource(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo, 
       @ApiParam(value = "the database collection containing the document to delete") @PathParam("collection") String collection,
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id)
   {
@@ -370,7 +370,7 @@ public class StorageResource extends WebResource
 
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordDelete(uriInfo, securityContext.getUserPrincipal());
+      recordDelete(request, uriInfo, securityContext.getUserPrincipal());
       
       if(applicationDataService.delete(securityContext.getUserPrincipal(), collection, id) != 1)
         throw new NotFoundException();

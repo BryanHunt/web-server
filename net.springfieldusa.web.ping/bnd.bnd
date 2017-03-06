@@ -3,7 +3,10 @@
 	osgi.core;version=6.0,\
 	osgi.cmpn;version=6.0,\
 	javax.ws.rs-api;version=2.0,\
-	com.eclipsesource.jaxrs.swagger-all;version=1.5
+	com.eclipsesource.jaxrs.swagger-all;version=1.5,\
+	net.springfieldusa.web;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	javax.servlet;version=3.1
 
 -testpath: \
 	${junit}
@@ -11,5 +14,5 @@
 javac.source: 1.8
 javac.target: 1.8
 
-Bundle-Version: 1.0.1.${tstamp}
+Bundle-Version: 1.0.2.${tstamp}
 Private-Package: net.springfieldusa.web.ping

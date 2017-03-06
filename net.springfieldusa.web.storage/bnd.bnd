@@ -9,12 +9,13 @@
 	osgi.annotation;version=6.0,\
 	osgi.cmpn;version=6.0,\
 	com.eclipsesource.jaxrs.swagger-all;version=1.5,\
-	com.eclipsesource.jaxrs.provider.security;version=2.2
+	com.eclipsesource.jaxrs.provider.security;version=2.2,\
+	javax.servlet;version=3.1
 
 -testpath: \
 	${junit}
 
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: 1.0.1.${tstamp}
 Private-Package: net.springfieldusa.web.storage
 -dsannotations: *
 -dsannotations-options: inherit
