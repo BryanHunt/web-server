@@ -38,53 +38,53 @@ public abstract class WebResource extends AbstractComponent
     usageLogServiceReference.compareAndSet(webResourceUsageLogService, null);
   }
 
-  protected void recordPost(HttpServletRequest request, UriInfo uri, Principal user)
+  protected void recordPost(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordPost(request, uri, user);
+    usageLogService.recordPost(request, uri, user, responseCode, processTime);
   }
   
-  protected void recordGet(HttpServletRequest request, UriInfo uri, Principal user)
+  protected void recordGet(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordGet(request, uri, user);    
+    usageLogService.recordGet(request, uri, user, responseCode, processTime);    
   }
   
-  protected void recordPut(HttpServletRequest request, UriInfo uri, Principal user)
+  protected void recordPut(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordPut(request, uri, user);
+    usageLogService.recordPut(request, uri, user, responseCode, processTime);
   }
   
-  protected void recordPatch(HttpServletRequest request, UriInfo uri, Principal user)
+  protected void recordPatch(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordPatch(request, uri, user);
+    usageLogService.recordPatch(request, uri, user, responseCode, processTime);
   }
   
-  protected void recordDelete(HttpServletRequest request, UriInfo uri, Principal user)
+  protected void recordDelete(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime)
   {
     WebResourceUsageLogService usageLogService = usageLogServiceReference.get();
     
     if(usageLogService == null)
       return;
     
-    usageLogService.recordDelete(request, uri, user);
+    usageLogService.recordDelete(request, uri, user, responseCode, processTime);
   }
 }

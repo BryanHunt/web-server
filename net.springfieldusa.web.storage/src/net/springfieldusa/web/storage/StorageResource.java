@@ -99,16 +99,20 @@ public class StorageResource extends WebResource
       @ApiParam(value = "the database collection in which to store the document", required = true) @PathParam("collection") String collection,
       @ApiParam(value = "the document to store", required = true) JsonApiDataWrapper resource)
   {
+    long startTime = System.currentTimeMillis();
+    
     try
     {
       //--- Authentication ------------------------------------------------------------------------
       
       if(securityContext.getUserPrincipal() == null)
+      {
+        recordGet(request, uriInfo, securityContext.getUserPrincipal(), 401, System.currentTimeMillis() - startTime);
         throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
-
+      }
+      
       // --- Business Logic ------------------------------------------------------------------------
       
-      recordPost(request, uriInfo, securityContext.getUserPrincipal());
       EntityObject entity = new EntityObject((String) resource.getData().getId(), resource.getData().camelizedAttributes(), decodeRelationships(resource), resource.getMeta());
 
       entity = applicationDataService.create(securityContext.getUserPrincipal(), collection, entity);
@@ -116,14 +120,18 @@ public class StorageResource extends WebResource
       // --- JSON API ------------------------------------------------------------------------------
 
       JsonApi jsonApi = new JsonApiDataWrapper(new JsonApiData(entity.getId(), collection, entity.getAttributes(), encodeRelationships(entity), entity.getMeta()));
+      
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 202, System.currentTimeMillis() - startTime);
       return Response.created(new URI(uriInfo.getAbsolutePath().toString() + "/" + entity.getId())).entity(jsonApi).build();
     }
     catch (DuplicateIdException e)
     {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 409, System.currentTimeMillis() - startTime);
       throw new ClientErrorException("Duplicate ID", Status.CONFLICT);
     }
     catch (AuthorizationException e)
     {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
     }
     catch (WebApplicationException e)
@@ -133,6 +141,7 @@ public class StorageResource extends WebResource
     catch (Exception e)
     {
       log(LogService.LOG_ERROR, "Unexpected exception", e);
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 500, System.currentTimeMillis() - startTime);
       throw new InternalServerErrorException(e);
     }
   }
@@ -148,16 +157,19 @@ public class StorageResource extends WebResource
       @ApiParam(value = "the maximum number of documents to return", required = false) @QueryParam("limit") Integer limit, 
       @ApiParam(value = "the native database query", required = false) @QueryParam("filter") String filter)
   {
+    long startTime = System.currentTimeMillis();
+
     try
     {
       //--- Authentication ------------------------------------------------------------------------
       
       if(securityContext.getUserPrincipal() == null)
+      {
+        recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
         throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
-
+      }
+      
       // --- Business Logic ------------------------------------------------------------------------
-
-      recordGet(request, uriInfo, securityContext.getUserPrincipal());
 
       if (skip == null)
         skip = offset != null ? offset : 0;
@@ -187,8 +199,11 @@ public class StorageResource extends WebResource
       
 
       if (entities == null || entities.isEmpty())
+      {
+        recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
         return new JsonApiDataCollectionWrapper(Collections.emptyList());
-
+      }
+      
       // --- JSON API ------------------------------------------------------------------------------
 
       Collection<JsonApiData> jsonData = new ArrayList<>();
@@ -197,10 +212,12 @@ public class StorageResource extends WebResource
         jsonData.add(new JsonApiData(entity.getId(), collection, entity.getAttributes(), encodeRelationships(entity), entity.getMeta()));
       });
 
+      recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return new JsonApiDataCollectionWrapper(jsonData);
     }
     catch (AuthorizationException e)
     {
+      recordGet(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
     }
     catch (WebApplicationException e)
@@ -210,6 +227,7 @@ public class StorageResource extends WebResource
     catch (Exception e)
     {
       log(LogService.LOG_ERROR, "Unexpected exception", e);
+      recordGet(request, uriInfo, securityContext.getUserPrincipal(), 500, System.currentTimeMillis() - startTime);
       throw new InternalServerErrorException(e);
     }
   }
@@ -224,28 +242,36 @@ public class StorageResource extends WebResource
       @ApiParam(value = "the database collection from wich to retrieve the document", required = true) @PathParam("collection") String collection,
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id)
   {
+    long startTime = System.currentTimeMillis();
+
     try
     {
       //--- Authentication ------------------------------------------------------------------------
       
       if(securityContext.getUserPrincipal() == null)
+      {
+        recordGet(request, uriInfo, securityContext.getUserPrincipal(), 401, System.currentTimeMillis() - startTime);
         throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
-
+      }
+      
       // --- Business Logic ------------------------------------------------------------------------
-
-      recordGet(request, uriInfo, securityContext.getUserPrincipal());
 
       EntityObject entity = applicationDataService.retrieve(securityContext.getUserPrincipal(), collection, id);
 
       if (entity == null)
+      {
+        recordGet(request, uriInfo, securityContext.getUserPrincipal(), 404, System.currentTimeMillis() - startTime);
         throw new NotFoundException();
-
+      }
+      
       // --- JSON API ------------------------------------------------------------------------------
 
+      recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return new JsonApiDataWrapper(new JsonApiData(id, collection, entity.getAttributes(), encodeRelationships(entity), entity.getMeta()));
     }
     catch (AuthorizationException e)
     {
+      recordGet(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
     }
     catch (WebApplicationException e)
@@ -255,6 +281,7 @@ public class StorageResource extends WebResource
     catch (Exception e)
     {
       log(LogService.LOG_ERROR, "Unexpected exception", e);
+      recordGet(request, uriInfo, securityContext.getUserPrincipal(), 500, System.currentTimeMillis() - startTime);
       throw new InternalServerErrorException(e);
     }
   }
@@ -271,26 +298,34 @@ public class StorageResource extends WebResource
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id, 
       @ApiParam(value = "the document to store", required = true) JsonApiDataWrapper resource)
   {
+    long startTime = System.currentTimeMillis();
+
     try
     {
       //--- Authentication ------------------------------------------------------------------------
       
       if(securityContext.getUserPrincipal() == null)
-        throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
-
+      {
+        recordPut(request, uriInfo, securityContext.getUserPrincipal(), 401, System.currentTimeMillis() - startTime);
+       throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
+      }
+      
       // --- Business Logic ------------------------------------------------------------------------
-
-      recordPut(request, uriInfo, securityContext.getUserPrincipal());
 
       EntityObject entity = new EntityObject(id, resource.getData().camelizedAttributes(), decodeRelationships(resource), resource.getMeta());
 
       if(applicationDataService.update(securityContext.getUserPrincipal(), collection, entity) != 1)
+      {
+        recordPut(request, uriInfo, securityContext.getUserPrincipal(), 404, System.currentTimeMillis() - startTime);
         throw new NotFoundException();
-
+      }
+      
+      recordPut(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return Response.noContent().build();
     }
     catch (AuthorizationException e)
     {
+      recordPut(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
     }
     catch (WebApplicationException e)
@@ -300,6 +335,7 @@ public class StorageResource extends WebResource
     catch (Exception e)
     {
       log(LogService.LOG_ERROR, "Unexpected exception", e);
+      recordPut(request, uriInfo, securityContext.getUserPrincipal(), 500, System.currentTimeMillis() - startTime);
       throw new InternalServerErrorException(e);
     }
   }
@@ -316,27 +352,34 @@ public class StorageResource extends WebResource
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id, 
       @ApiParam(value = "the document attributes to update", required = true) JsonApiDataWrapper resource)
   {
+    long startTime = System.currentTimeMillis();
     
     try
     {
       //--- Authentication ------------------------------------------------------------------------
       
       if(securityContext.getUserPrincipal() == null)
+      {
+        recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 401, System.currentTimeMillis() - startTime);
         throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
-
+      }
+      
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordPatch(request, uriInfo, securityContext.getUserPrincipal());
-      
       EntityObject entity = new EntityObject(id, resource.getData().camelizedAttributes(), decodeRelationships(resource), resource.getMeta());
       
       if(applicationDataService.patch(securityContext.getUserPrincipal(), collection, entity) != 1)
+      {
+        recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 404, System.currentTimeMillis() - startTime);
         throw new NotFoundException();
-
+      }
+      
+      recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return Response.noContent().build();
     }
     catch (AuthorizationException e)
     {
+      recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
     }
     catch (WebApplicationException e)
@@ -346,6 +389,7 @@ public class StorageResource extends WebResource
     catch (Exception e)
     {
       log(LogService.LOG_ERROR, "Unexpected exception", e);
+      recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 500, System.currentTimeMillis() - startTime);
       throw new InternalServerErrorException(e);
     }
   }
@@ -361,24 +405,32 @@ public class StorageResource extends WebResource
       @ApiParam(value = "the database collection containing the document to delete") @PathParam("collection") String collection,
       @ApiParam(value = "the document id", required = true) @PathParam("id") String id)
   {
+    long startTime = System.currentTimeMillis();
+    
     try
     {
       //--- Authentication ------------------------------------------------------------------------
       
       if(securityContext.getUserPrincipal() == null)
+      {
+        recordDelete(request, uriInfo, securityContext.getUserPrincipal(), 401, System.currentTimeMillis() - startTime);
         throw new NotAuthorizedException(authenticationHandler.getAuthenticationScheme());
-
+      }
+      
       // --- Business Logic ------------------------------------------------------------------------
 
-      recordDelete(request, uriInfo, securityContext.getUserPrincipal());
-      
       if(applicationDataService.delete(securityContext.getUserPrincipal(), collection, id) != 1)
+      {
+        recordDelete(request, uriInfo, securityContext.getUserPrincipal(), 404, System.currentTimeMillis() - startTime);
         throw new NotFoundException();
+      }
       
+      recordDelete(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return Response.noContent().build();
     }
     catch (AuthorizationException e)
     {
+      recordDelete(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
     }
     catch (WebApplicationException e)
@@ -388,6 +440,7 @@ public class StorageResource extends WebResource
     catch (Exception e)
     {
       log(LogService.LOG_ERROR, "Unexpected exception", e);
+      recordDelete(request, uriInfo, securityContext.getUserPrincipal(), 500, System.currentTimeMillis() - startTime);
       throw new InternalServerErrorException(e);
     }
   }

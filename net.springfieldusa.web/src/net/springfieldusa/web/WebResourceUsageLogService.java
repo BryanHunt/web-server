@@ -18,9 +18,9 @@ import javax.ws.rs.core.UriInfo;
 
 public interface WebResourceUsageLogService
 {
-  void recordPost(HttpServletRequest request, UriInfo uri, Principal user);
-  void recordGet(HttpServletRequest request, UriInfo uri, Principal user);
-  void recordPut(HttpServletRequest request, UriInfo uri, Principal user);
-  void recordPatch(HttpServletRequest request, UriInfo uri, Principal user);
-  void recordDelete(HttpServletRequest request, UriInfo uri, Principal user);
+  void recordPost(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime);
+  void recordGet(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime);
+  void recordPut(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime);
+  void recordPatch(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime);
+  void recordDelete(HttpServletRequest request, UriInfo uri, Principal user, int responseCode, long processTime);
 }

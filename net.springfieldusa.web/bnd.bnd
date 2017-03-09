@@ -6,5 +6,5 @@
 	javax.servlet;version=3.1
 -baseline: *
 
-Bundle-Version: 2.0.0.${tstamp}
+Bundle-Version: 3.0.0.${tstamp}
 Export-Package: net.springfieldusa.web

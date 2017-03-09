@@ -24,6 +24,7 @@ import org.osgi.service.component.annotations.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.springfieldusa.web.WebResource;
+import net.springfieldusa.web.WebResourceUsageLogService;
 
 @Api(value = "ping")
 @Path("/ping")
@@ -35,7 +36,20 @@ public class PingResource extends WebResource
   @ApiOperation(value = "Endpoint to check server health")
   public String ping(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo)
   {
-    recordGet(request, uriInfo, securityContext.getUserPrincipal());
+    recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, 0);
     return "Hello";
+  }
+
+  @Override
+  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+  public void bindWebResourceUsageLogService(WebResourceUsageLogService webResourceUsageLogService)
+  {
+    super.bindWebResourceUsageLogService(webResourceUsageLogService);
+  }
+
+  @Override
+  public void unbindWebResourceUsageLogService(WebResourceUsageLogService webResourceUsageLogService)
+  {
+    super.unbindWebResourceUsageLogService(webResourceUsageLogService);
   }
 }

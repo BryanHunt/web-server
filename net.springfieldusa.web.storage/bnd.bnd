@@ -15,7 +15,7 @@
 -testpath: \
 	${junit}
 
-Bundle-Version: 1.0.1.${tstamp}
+Bundle-Version: 1.0.2.${tstamp}
 Private-Package: net.springfieldusa.web.storage
 -dsannotations: *
 -dsannotations-options: inherit
