@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -56,6 +57,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.springfieldusa.data.ApplicationDataService;
+import net.springfieldusa.data.ApplicationException;
 import net.springfieldusa.data.AuthorizationException;
 import net.springfieldusa.entity.EntityObject;
 import net.springfieldusa.entity.ObjectReference;
@@ -124,15 +126,20 @@ public class StorageResource extends WebResource
       recordPost(request, uriInfo, securityContext.getUserPrincipal(), 202, System.currentTimeMillis() - startTime);
       return Response.created(new URI(uriInfo.getAbsolutePath().toString() + "/" + entity.getId())).entity(jsonApi).build();
     }
-    catch (DuplicateIdException e)
+    catch (ApplicationException e)
     {
-      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 409, System.currentTimeMillis() - startTime);
-      throw new ClientErrorException("Duplicate ID", Status.CONFLICT);
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 400, System.currentTimeMillis() - startTime);
+      throw new BadRequestException(e.getMessage(), e);
     }
     catch (AuthorizationException e)
     {
       recordPost(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
       throw new ForbiddenException(e);    
+    }
+    catch (DuplicateIdException e)
+    {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 409, System.currentTimeMillis() - startTime);
+      throw new ClientErrorException("Duplicate ID", Status.CONFLICT);
     }
     catch (WebApplicationException e)
     {
@@ -215,6 +222,11 @@ public class StorageResource extends WebResource
       recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return new JsonApiDataCollectionWrapper(jsonData);
     }
+    catch (ApplicationException e)
+    {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 400, System.currentTimeMillis() - startTime);
+      throw new BadRequestException(e.getMessage(), e);
+    }
     catch (AuthorizationException e)
     {
       recordGet(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
@@ -268,6 +280,11 @@ public class StorageResource extends WebResource
 
       recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return new JsonApiDataWrapper(new JsonApiData(id, collection, entity.getAttributes(), encodeRelationships(entity), entity.getMeta()));
+    }
+    catch (ApplicationException e)
+    {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 400, System.currentTimeMillis() - startTime);
+      throw new BadRequestException(e.getMessage(), e);
     }
     catch (AuthorizationException e)
     {
@@ -323,6 +340,11 @@ public class StorageResource extends WebResource
       recordPut(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return Response.noContent().build();
     }
+    catch (ApplicationException e)
+    {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 400, System.currentTimeMillis() - startTime);
+      throw new BadRequestException(e.getMessage(), e);
+    }
     catch (AuthorizationException e)
     {
       recordPut(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
@@ -377,6 +399,11 @@ public class StorageResource extends WebResource
       recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return Response.noContent().build();
     }
+    catch (ApplicationException e)
+    {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 400, System.currentTimeMillis() - startTime);
+      throw new BadRequestException(e.getMessage(), e);
+    }
     catch (AuthorizationException e)
     {
       recordPatch(request, uriInfo, securityContext.getUserPrincipal(), 403, System.currentTimeMillis() - startTime);
@@ -427,6 +454,11 @@ public class StorageResource extends WebResource
       
       recordDelete(request, uriInfo, securityContext.getUserPrincipal(), 200, System.currentTimeMillis() - startTime);
       return Response.noContent().build();
+    }
+    catch (ApplicationException e)
+    {
+      recordPost(request, uriInfo, securityContext.getUserPrincipal(), 400, System.currentTimeMillis() - startTime);
+      throw new BadRequestException(e.getMessage(), e);
     }
     catch (AuthorizationException e)
     {

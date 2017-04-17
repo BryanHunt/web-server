@@ -4,5 +4,5 @@
 	net.springfieldusa.storage.api;version=latest
 -baseline: *
 
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: 1.0.1.${tstamp}
 Export-Package: net.springfieldusa.data

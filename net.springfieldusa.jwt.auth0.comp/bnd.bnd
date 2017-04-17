@@ -10,5 +10,5 @@
 	javax.servlet;version=3.1
 -dsannotations: *
 -dsannotations-options: inherit
-Bundle-Version: 3.0.1.${tstamp}
+Bundle-Version: 3.0.2.${tstamp}
 Private-Package: net.springfieldusa.jwt.auth0.comp

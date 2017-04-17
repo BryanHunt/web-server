@@ -8,5 +8,5 @@
 	net.springfieldusa.web;version=latest
 -dsannotations: *
 -dsannotations-options: inherit
-Bundle-Version: 1.0.1.${tstamp}
+Bundle-Version: 1.0.2.${tstamp}
 Private-Package: net.springfieldusa.web.session

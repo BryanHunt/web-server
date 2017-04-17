@@ -16,7 +16,7 @@
 	com.fasterxml.jackson.core.jackson-databind;version=2.5.0, \
 	com.fasterxml.jackson.core.jackson-annotations;version=2.5.0	
 
-Bundle-Version: 3.0.2.${tstamp}
+Bundle-Version: 3.0.3.${tstamp}
 Private-Package: net.springfieldusa.jwt.jjwt.comp
 -dsannotations: *
 -dsannotations-options: inherit

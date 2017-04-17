@@ -24,7 +24,7 @@ import net.springfieldusa.storage.DuplicateIdException;
 @ProviderType
 public interface ApplicationDataService
 {
-  <T extends EntityObject> T create(Principal principal, String collection, T data) throws ApplicationException, AuthorizationException, AuthorizationException, DuplicateIdException;
+  <T extends EntityObject> T create(Principal principal, String collection, T data) throws ApplicationException, AuthorizationException, DuplicateIdException;
   
   EntityObject retrieve(Principal principal, String collection, String id) throws ApplicationException, AuthorizationException;
   EntityObject retrieve(Principal principal, String collection, String key, String value) throws ApplicationException, AuthorizationException;

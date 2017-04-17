@@ -11,6 +11,8 @@
 
 package net.springfieldusa.web.ping;
 
+import java.util.Calendar;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,7 +39,7 @@ public class PingResource extends WebResource
   public String ping(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo)
   {
     recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, 0);
-    return "Hello";
+    return Calendar.getInstance().getTime().toString();
   }
 
   @Override
