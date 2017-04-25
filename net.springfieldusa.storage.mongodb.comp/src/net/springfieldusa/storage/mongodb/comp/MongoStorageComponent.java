@@ -165,12 +165,14 @@ public class MongoStorageComponent extends AbstractComponent implements StorageS
           updates.add(set(RELATIONSHIPS + "." + relationship.getType(), dbReferences));
           
           relationship.getObjectReferences().forEach((reference) -> {
-            dbReferences.add(createReference(reference));
+            if(reference.getId() != null)
+              dbReferences.add(createReference(reference));
           });
         }
         else
         {
-          updates.add(set(RELATIONSHIPS + "." + relationship.getType(), createReference(relationship.getObjectReference())));
+          if(relationship.getObjectReference().getId() != null)
+            updates.add(set(RELATIONSHIPS + "." + relationship.getType(), createReference(relationship.getObjectReference())));
         }
       }
     }
@@ -329,12 +331,14 @@ public class MongoStorageComponent extends AbstractComponent implements StorageS
       dbRelationships.put(relationship.getType(), dbReferences);
 
       relationship.getObjectReferences().forEach((reference) -> {
-        dbReferences.add(createReference(reference));
+        if(reference.getId() != null)
+          dbReferences.add(createReference(reference));
       });
     }
     else
     {
-      dbRelationships.put(relationship.getType(), createReference(relationship.getObjectReference()));
+      if(relationship.getObjectReference().getId() != null)
+        dbRelationships.put(relationship.getType(), createReference(relationship.getObjectReference()));
     }
   }
 
