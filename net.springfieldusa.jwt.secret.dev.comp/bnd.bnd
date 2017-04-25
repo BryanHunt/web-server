@@ -6,6 +6,6 @@
 -testpath: \
 	${junit}
 
-Bundle-Version: 1.0.2.${tstamp}
+Bundle-Version: 1.0.3.${tstamp}
 Private-Package: net.springfieldusa.jwt.secret.dev.comp
 -dsannotations: *

@@ -121,7 +121,7 @@ public class MongoStorageComponent extends AbstractComponent implements StorageS
     document.put(META, data.getMeta());
     document.put(RELATIONSHIPS, createRelationships(data));
     UpdateResult result = mongoCollection.replaceOne(eq(ID, data.getId()), document);
-    return result.getModifiedCount();
+    return result.getMatchedCount();
   }
 
   @Override
@@ -134,7 +134,7 @@ public class MongoStorageComponent extends AbstractComponent implements StorageS
     document.put(META, data.getMeta());
     document.put(RELATIONSHIPS, createRelationships(data));
     UpdateResult result = mongoCollection.updateMany(jsonQuery, document);
-    return result.getModifiedCount();
+    return result.getMatchedCount();
   }
 
   @Override
@@ -155,9 +155,28 @@ public class MongoStorageComponent extends AbstractComponent implements StorageS
         updates.add(set(META + "." + entry.getKey(), entry.getValue()));
     }
 
-    // FIXME: handle relationships
+    if(data.getRelationships() != null)
+    {
+      for (Relationship relationship : data.getRelationships())
+      {
+        if (relationship.isMany())
+        {
+          Collection<Document> dbReferences = new ArrayList<>();
+          updates.add(set(RELATIONSHIPS + "." + relationship.getType(), dbReferences));
+          
+          relationship.getObjectReferences().forEach((reference) -> {
+            dbReferences.add(createReference(reference));
+          });
+        }
+        else
+        {
+          updates.add(set(RELATIONSHIPS + "." + relationship.getType(), createReference(relationship.getObjectReference())));
+        }
+      }
+    }
+    
     UpdateResult result = mongoCollection.updateOne(eq(ID, data.getId()), combine(updates));
-    return result.getModifiedCount();
+    return result.getMatchedCount();
   }
 
   @Override
@@ -297,22 +316,26 @@ public class MongoStorageComponent extends AbstractComponent implements StorageS
     Document dbRelationships = new Document();
 
     for (Relationship relationship : data.getRelationships())
-    {
-      if (relationship.isMany())
-      {
-        Collection<Document> dbReferences = new ArrayList<>();
-        dbRelationships.put(relationship.getType(), dbReferences);
+      buildRelationship(dbRelationships, relationship);
 
-        relationship.getObjectReferences().forEach((reference) -> {
-          dbReferences.add(createReference(reference));
-        });
-      }
-      else
-      {
-        dbRelationships.put(relationship.getType(), createReference(relationship.getObjectReference()));
-      }
-    }
     return dbRelationships;
+  }
+
+  private void buildRelationship(Document dbRelationships, Relationship relationship)
+  {
+    if (relationship.isMany())
+    {
+      Collection<Document> dbReferences = new ArrayList<>();
+      dbRelationships.put(relationship.getType(), dbReferences);
+
+      relationship.getObjectReferences().forEach((reference) -> {
+        dbReferences.add(createReference(reference));
+      });
+    }
+    else
+    {
+      dbRelationships.put(relationship.getType(), createReference(relationship.getObjectReference()));
+    }
   }
 
   private Document createReference(ObjectReference reference)
