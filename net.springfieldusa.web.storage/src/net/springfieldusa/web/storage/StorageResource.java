@@ -522,7 +522,18 @@ public class StorageResource extends WebResource
     {
       @SuppressWarnings("unchecked")
       Map<String, Object> relationshipData = (Map<String, Object>) entry.getValue();
-      relationships.add(new Relationship(entry.getKey(), relationshipData.get("data")));
+      
+      try
+      {
+        relationships.add(new Relationship(entry.getKey(), relationshipData.get("data")));
+      }
+      catch (IllegalArgumentException e)
+      {
+        // IllegalArgumentException is thrown if the relationship does not have an ID.
+        // We ignore this exception for the case where the UI doesn't have the ID yet.
+        // It is up to the UI to re-save the entity when the ID is known.  The primary
+        // use caese is a many-to-many relationship.
+      }
     }
 
     return relationships;
