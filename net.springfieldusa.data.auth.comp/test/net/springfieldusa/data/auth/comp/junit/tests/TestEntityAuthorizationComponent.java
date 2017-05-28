@@ -16,16 +16,19 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import net.springfieldusa.data.ApplicationException;
 import net.springfieldusa.data.auth.comp.EntityAuthorizationComponent;
 import net.springfieldusa.data.auth.comp.EntityAuthorizationComponent.Config;
+import net.springfieldusa.data.auth.comp.EntitySecurityProviderComponent;
+import net.springfieldusa.data.auth.comp.ObjectSecurity;
 import net.springfieldusa.entity.EntityObject;
-import net.springfieldusa.entity.ObjectSecurity;
 import net.springfieldusa.security.SecurityException;
 import net.springfieldusa.security.SecurityService;
 
 public class TestEntityAuthorizationComponent
 {
   private EntityAuthorizationComponent entityAuthorizationComponent;
+  private EntitySecurityProviderComponent entitySecurityProviderComponent;
   private SecurityService securityService;
   private Map<String, Object> properties;
   private Principal principal;
@@ -33,9 +36,10 @@ public class TestEntityAuthorizationComponent
   private Collection<EntityObject> dataObjects;
   
   @Before
-  public void setUp()
+  public void setUp() throws Exception
   {
     entityAuthorizationComponent = new EntityAuthorizationComponent();
+    entitySecurityProviderComponent = new EntitySecurityProviderComponent();
     properties = new HashMap<>();
     
     dataObject = new EntityObject();
@@ -45,7 +49,10 @@ public class TestEntityAuthorizationComponent
     securityService = mock(SecurityService.class);
     principal = mock(Principal.class);
     
+    entitySecurityProviderComponent.activate(aQute.lib.converter.Converter.cnv(net.springfieldusa.data.auth.comp.EntitySecurityProviderComponent.Config.class, properties));
+
     entityAuthorizationComponent.bindSecurityService(securityService);
+    entityAuthorizationComponent.bindEntitySecurityProviderComponent(entitySecurityProviderComponent);
   }
   
   //--- Test create object ------------------------------------------------------------------------
@@ -120,10 +127,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("junit");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -137,10 +141,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("test");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -158,10 +159,9 @@ public class TestEntityAuthorizationComponent
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
     when(securityService.getRoles(principal)).thenReturn(groups);
     
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
+       
+    ObjectSecurity security = setOwner(dataObject, "junit"); 
     security.put(ObjectSecurity.KEY_READ_GROUPS, groups);
-    dataObject.setSecurity(security);
     
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
@@ -232,10 +232,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("junit");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -249,10 +246,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("test");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -270,10 +264,8 @@ public class TestEntityAuthorizationComponent
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
     when(securityService.getRoles(principal)).thenReturn(groups);
     
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
+    ObjectSecurity security = setOwner(dataObject, "junit"); 
     security.put(ObjectSecurity.KEY_READ_GROUPS, groups);
-    dataObject.setSecurity(security);
     
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
@@ -344,10 +336,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("junit");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -361,10 +350,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("test");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -382,10 +368,8 @@ public class TestEntityAuthorizationComponent
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
     when(securityService.getRoles(principal)).thenReturn(groups);
     
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
+    ObjectSecurity security = setOwner(dataObject, "junit"); 
     security.put(ObjectSecurity.KEY_WRITE_GROUPS, groups);
-    dataObject.setSecurity(security);
     
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
@@ -456,10 +440,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("junit");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -473,10 +454,7 @@ public class TestEntityAuthorizationComponent
     when(principal.getName()).thenReturn("test");
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
 
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
-    dataObject.setSecurity(security);
-    
+    setOwner(dataObject, "junit");    
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
@@ -494,10 +472,8 @@ public class TestEntityAuthorizationComponent
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
     when(securityService.getRoles(principal)).thenReturn(groups);
     
-    ObjectSecurity security = new ObjectSecurity();
-    security.put(ObjectSecurity.KEY_OWNER, "junit");
+    ObjectSecurity security = setOwner(dataObject, "junit"); 
     security.put(ObjectSecurity.KEY_DELETE_GROUPS, groups);
-    dataObject.setSecurity(security);
     
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
@@ -514,5 +490,19 @@ public class TestEntityAuthorizationComponent
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
     assertFalse(entityAuthorizationComponent.isDeleteAuthorizedFor(principal, "collection", dataObject));
+  }
+  
+  private ObjectSecurity setOwner(EntityObject entity, String owner) throws ApplicationException
+  {
+    entitySecurityProviderComponent.setObjectSecurity(entity, new Principal()
+    {
+      @Override
+      public String getName()
+      {
+        return owner;
+      }
+    });
+    
+    return entitySecurityProviderComponent.getObjectSecurity(entity);
   }
 }

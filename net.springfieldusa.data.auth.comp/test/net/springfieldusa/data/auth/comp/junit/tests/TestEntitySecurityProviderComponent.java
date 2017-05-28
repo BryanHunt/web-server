@@ -1,8 +1,5 @@
-package net.springfieldusa.data.comp.junit.tests;
+package net.springfieldusa.data.auth.comp.junit.tests;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -15,10 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import net.springfieldusa.data.ApplicationException;
-import net.springfieldusa.data.comp.EntitySecurityProviderComponent;
-import net.springfieldusa.data.comp.EntitySecurityProviderComponent.Config;
+import net.springfieldusa.data.auth.comp.EntitySecurityProviderComponent;
+import net.springfieldusa.data.auth.comp.EntitySecurityProviderComponent.Config;
+import net.springfieldusa.data.auth.comp.ObjectSecurity;
 import net.springfieldusa.entity.EntityObject;
-import net.springfieldusa.entity.ObjectSecurity;
 import net.springfieldusa.security.SecurityException;
 import net.springfieldusa.security.SecurityService;
 
@@ -51,45 +48,41 @@ public class TestEntitySecurityProviderComponent
     when(principal.getName()).thenReturn("junit");
     entitySecurityProviderComponent.setObjectSecurity(dataObject, principal);
     
-    assertThat(dataObject.getSecurity(), is(notNullValue()));
-    assertTrue(dataObject.getSecurity().isOwner(principal.getName()));
+    assertTrue(entitySecurityProviderComponent.getObjectSecurity(dataObject).isOwner(principal.getName()));
   }
 
   @Test
-  public void testSetObjectSecurityUserProvidedSecurity() throws ApplicationException
+  public void testSetObjectSecurityUserProvidedSecurity() throws ApplicationException, SecurityException
   {
-    ObjectSecurity security = new ObjectSecurity();
-    security.setOwner("test");
-    dataObject.setSecurity(security);
-    
-    when(principal.getName()).thenReturn("junit");
+    when(principal.getName()).thenReturn("test");
     entitySecurityProviderComponent.setObjectSecurity(dataObject, principal);
     
-    assertThat(dataObject.getSecurity(), is(notNullValue()));
-    assertTrue(dataObject.getSecurity().isOwner(principal.getName()));
+    ObjectSecurity security = new ObjectSecurity((Map<String, Object>) dataObject.getMeta().get("security"));
+    security.setOwner("junit");
+    
+    when(securityService.authorizeForRole(principal, "admin")).thenReturn(false);
+    entitySecurityProviderComponent.setObjectSecurity(dataObject, principal);
+    
+    assertTrue(entitySecurityProviderComponent.getObjectSecurity(dataObject).isOwner("test"));
   }
 
   @Test
   public void testSetObjectSecurityAdminProvidedSecurity() throws ApplicationException, SecurityException
   {
-    ObjectSecurity security = new ObjectSecurity();
-    security.setOwner("test");
-    dataObject.setSecurity(security);
+    when(principal.getName()).thenReturn("test");
+    entitySecurityProviderComponent.setObjectSecurity(dataObject, principal);
     
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(true);
     when(principal.getName()).thenReturn("junit");
     entitySecurityProviderComponent.setObjectSecurity(dataObject, principal);
     
-    assertThat(dataObject.getSecurity(), is(notNullValue()));
-    assertTrue(dataObject.getSecurity().isOwner("test"));
+    assertTrue(entitySecurityProviderComponent.getObjectSecurity(dataObject).isOwner("test"));
   }
   
   @Test(expected = ApplicationException.class)
   public void testSetObjectSecurityWithSecurityException() throws SecurityException, ApplicationException
   {
-    ObjectSecurity security = new ObjectSecurity();
-    security.setOwner("test");
-    dataObject.setSecurity(security);
+    entitySecurityProviderComponent.setObjectSecurity(dataObject, principal);
     
     when(securityService.authorizeForRole(principal, "admin")).thenThrow(new SecurityException());
     when(principal.getName()).thenReturn("junit");

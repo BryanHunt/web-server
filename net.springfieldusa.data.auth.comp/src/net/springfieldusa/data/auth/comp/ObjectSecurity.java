@@ -9,31 +9,31 @@
  *    Bryan Hunt - initial API and implementation
  *******************************************************************************/
 
-package net.springfieldusa.entity;
+package net.springfieldusa.data.auth.comp;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class ObjectSecurity extends HashMap<String, Object>
+public class ObjectSecurity
 {
-  private static final long serialVersionUID = 2361142413456687103L;
-
   public static final String KEY_OWNER = "owner";
   public static final String KEY_ADMIN_GROUPS = "adminGroups";
   public static final String KEY_READ_GROUPS = "readGroups";
   public static final String KEY_WRITE_GROUPS = "writeGroups";
   public static final String KEY_DELETE_GROUPS = "deleteGroups";
 
+  private Map<String, Object> attributes;
+  
   public ObjectSecurity()
   {
-    super();
+    attributes = new HashMap<>();
   }
   
   public ObjectSecurity(Map<String, Object> attributes)
   {
-    super(attributes);
+    this.attributes = attributes;
   }
 
   public void addReadGroup(String groupName)
@@ -109,6 +109,21 @@ public class ObjectSecurity extends HashMap<String, Object>
     return checkPermission(KEY_ADMIN_GROUPS, groups);
   }
 
+  public Object get(String key)
+  {
+    return attributes.get(key);
+  }
+  
+  public Object put(String key, Object value)
+  {
+    return attributes.put(key, value);
+  }
+
+  public Map<String, Object> getAttributes()
+  {
+    return attributes;
+  }
+  
   private boolean checkPermission(String groupKey, Collection<String> groups)
   {
     HashSet<String> permissionGroup = new HashSet<>(getPermissionGroup(groupKey));

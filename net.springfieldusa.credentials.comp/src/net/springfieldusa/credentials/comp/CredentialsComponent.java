@@ -24,7 +24,7 @@ import net.springfieldusa.credentials.CredentialException;
 import net.springfieldusa.credentials.CredentialsService;
 import net.springfieldusa.credentials.EncryptedCredential;
 import net.springfieldusa.credentials.UnencryptedCredential;
-import net.springfieldusa.entity.ObjectSecurity;
+import net.springfieldusa.data.EntitySecurityProvider;
 import net.springfieldusa.password.EncryptionException;
 import net.springfieldusa.password.PasswordService;
 import net.springfieldusa.storage.StorageService;
@@ -42,6 +42,7 @@ public class CredentialsComponent extends AbstractComponent implements Credentia
 
   private volatile PasswordService passwordService;
   private volatile StorageService storageService;
+  private volatile EntitySecurityProvider securityProvider;
 
   @Activate
   public void activate() throws CredentialException
@@ -81,9 +82,15 @@ public class CredentialsComponent extends AbstractComponent implements Credentia
   {
     try
     {
-      ObjectSecurity security = new ObjectSecurity();
-      security.setOwner(encryptedCredential.getUserId());
-      encryptedCredential.setSecurity(security);
+      securityProvider.setObjectSecurity(encryptedCredential, new Principal()
+      {
+        @Override
+        public String getName()
+        {
+          return encryptedCredential.getUserId();
+        }
+      });
+      
       storageService.create(CREDENTIALS, encryptedCredential);
     }
     catch (Exception e)
@@ -167,6 +174,12 @@ public class CredentialsComponent extends AbstractComponent implements Credentia
     this.passwordService = passwordService;
   }
 
+  @Reference(unbind = "-")
+  public void bindEntitySecurityProvider(EntitySecurityProvider entitySecurityProvider)
+  {
+    this.securityProvider = entitySecurityProvider;
+  }
+  
   @Reference(unbind = "-")
   public void bindStorageService(StorageService storageService)
   {

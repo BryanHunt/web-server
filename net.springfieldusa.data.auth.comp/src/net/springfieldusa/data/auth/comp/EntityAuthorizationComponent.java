@@ -10,9 +10,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
 
 import net.springfieldusa.comp.AbstractComponent;
+import net.springfieldusa.data.ApplicationException;
 import net.springfieldusa.data.EntityAuthorizationService;
 import net.springfieldusa.entity.EntityObject;
-import net.springfieldusa.entity.ObjectSecurity;
 import net.springfieldusa.security.SecurityException;
 import net.springfieldusa.security.SecurityService;
 
@@ -28,7 +28,8 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
   private String adminGroup;
   private boolean missingSecurityAuthorization;
   private volatile SecurityService securityService;
-
+  private volatile EntitySecurityProviderComponent securityProvider;
+  
   @Activate
   public void activate(Config config)
   {
@@ -53,14 +54,14 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
       if (securityService.authorizeForRole(principal, adminGroup))
         return true;
 
-      ObjectSecurity security = object.getSecurity();
+      ObjectSecurity security = securityProvider.getObjectSecurity(object);
 
       if (security == null)
         return missingSecurityAuthorization;
 
       return security.isOwner(principal.getName()) || security.isReadAllowedFor(securityService.getRoles(principal));
     }
-    catch (SecurityException e)
+    catch (SecurityException | ApplicationException e)
     {
       log(LogService.LOG_ERROR, "Failed to authorize", e);
       return false;
@@ -80,7 +81,7 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
 
       for (EntityObject object : objects)
       {
-        ObjectSecurity security = object.getSecurity();
+        ObjectSecurity security = securityProvider.getObjectSecurity(object);
 
         if (security == null)
           return missingSecurityAuthorization;
@@ -89,7 +90,7 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
           return false;
       }
     }
-    catch (SecurityException e)
+    catch (SecurityException | ApplicationException e)
     {
       log(LogService.LOG_ERROR, "Failed to authorize", e);
       return false;
@@ -109,14 +110,14 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
       if (securityService.authorizeForRole(principal, adminGroup))
         return true;
 
-      ObjectSecurity security = object.getSecurity();
+      ObjectSecurity security = securityProvider.getObjectSecurity(object);
 
       if (security == null)
         return missingSecurityAuthorization;
 
       return security.isOwner(principal.getName()) || security.isWriteAllowedFor(securityService.getRoles(principal));
     }
-    catch (SecurityException e)
+    catch (SecurityException | ApplicationException e)
     {
       log(LogService.LOG_ERROR, "Failed to authorize", e);
       return false;
@@ -134,14 +135,14 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
       if (securityService.authorizeForRole(principal, adminGroup))
         return true;
 
-      ObjectSecurity security = object.getSecurity();
+      ObjectSecurity security = securityProvider.getObjectSecurity(object);
 
       if (security == null)
         return missingSecurityAuthorization;
 
       return security.isOwner(principal.getName()) || security.isDeleteAllowedFor(securityService.getRoles(principal));
     }
-    catch (SecurityException e)
+    catch (SecurityException | ApplicationException e)
     {
       log(LogService.LOG_ERROR, "Failed to authorize", e);
       return false;
@@ -152,5 +153,11 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
   public void bindSecurityService(SecurityService securityService)
   {
     this.securityService = securityService;
+  }
+  
+  @Reference(unbind = "-")
+  public void bindEntitySecurityProviderComponent(EntitySecurityProviderComponent securityProvider)
+  {
+    this.securityProvider = securityProvider;
   }
 }

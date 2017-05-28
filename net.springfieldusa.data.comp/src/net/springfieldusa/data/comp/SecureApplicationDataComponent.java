@@ -2,6 +2,7 @@ package net.springfieldusa.data.comp;
 
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -82,8 +83,13 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   {
     Collection<T> data = applicationDataService.find(principal, collection, query, factory);
     
-    if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, data))
-      throw new AuthorizationException();
+    Iterator<T> iterator = data.iterator();
+    
+    while(iterator.hasNext())
+    {
+      if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, iterator.next()))
+        iterator.remove();
+    }
     
     return data;
   }
@@ -93,8 +99,13 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   {
     Collection<T> data = applicationDataService.find(principal, collection, query, factory);
     
-    if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, data))
-      throw new AuthorizationException();
+    Iterator<T> iterator = data.iterator();
+    
+    while(iterator.hasNext())
+    {
+      if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, iterator.next()))
+        iterator.remove();
+    }
     
     return data;
   }
@@ -116,8 +127,13 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   {
     Collection<T> data = applicationDataService.find(principal, collection, query, skip, limit, factory);
     
-    if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, data))
-      throw new AuthorizationException();
+    Iterator<T> iterator = data.iterator();
+    
+    while(iterator.hasNext())
+    {
+      if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, iterator.next()))
+        iterator.remove();
+    }
     
     return data;
   }
@@ -127,8 +143,13 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   {
     Collection<T> data = applicationDataService.find(principal, collection, query, skip, limit, factory);
     
-    if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, data))
-      throw new AuthorizationException();
+    Iterator<T> iterator = data.iterator();
+    
+    while(iterator.hasNext())
+    {
+      if(!entityAuthorizationService.isRetrieveAuthorizedFor(principal, collection, iterator.next()))
+        iterator.remove();
+    }
     
     return data;
   }

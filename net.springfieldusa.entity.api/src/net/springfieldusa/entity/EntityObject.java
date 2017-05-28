@@ -27,7 +27,6 @@ public class EntityObject
 
   private String id;
   private Map<String, Object> meta;
-  private ObjectSecurity security;
 
   public EntityObject()
   {
@@ -125,25 +124,6 @@ public class EntityObject
   public void setMeta(Map<String, Object> meta)
   {
     this.meta = meta;
-  }
-
-  @SuppressWarnings("unchecked")
-  public ObjectSecurity getSecurity()
-  {
-    if(security == null)
-    {
-      Map<String, Object> data = (Map<String, Object>) getMetaObject(KEY_META_SECURITY);
-      
-      if(data != null)
-        security = new ObjectSecurity(data);
-    }
-    
-    return security;
-  }
-
-  public void setSecurity(ObjectSecurity security)
-  {
-    putMetaObject(KEY_META_SECURITY, security);
   }
 
   @Override
