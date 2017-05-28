@@ -27,58 +27,78 @@ debug-bundles: \
 
 junit: \
 	org.junit;version=4.12.1, \
-	org.hamcrest__hamcrest-all;version=1.3.0, \
+	org.hamcrest;version=1.3.0, \
 	org.mockito.mockito-core;version=1.10.19, \
 	org.objenesis;version=2.4.0, \
-	org.eclipselabs.eunit.junit.utils, \
+	org.eclipselabs.eunit.junit.utils;version=3.0, \
 	biz.aQute.bndlib
-	
-	
+
+
 -augment.fe_ht: \
 	org.apache.felix.http.api; \
 		requirement:="osgi.implementation;filter:='(&(osgi.implementation=osgi.http)(version>=1.0.0)(!(version>=2.0)))'"
-		
+
 -augment.fe_lo: \
 	org.apache.felix.log; \
 		capability:= "osgi.implementation;osgi.implementation=osgi.log"
-		
+
 
 -augment.fe_sc: \
 	org.apache.felix.scr; \
-		requirement:="osgi.implementation;filter:='(osgi.implementation=osgi.metatype)'"	
+		requirement:="osgi.implementation;filter:='(osgi.implementation=osgi.metatype)'"
 
 test-cases: 			${classes;NAMED;Test*}
 -resolve.effective:		resolve, active
 -releaserepo:                   Release
 
--plugin.01.Central:  \
-    aQute.bnd.deployer.repository.wrapper.Plugin; \
-      location      =	"${build}/cache/wrapper"; \
-      reindex		  =	true, \
-\
-    aQute.bnd.jpm.Repository; \
-      includeStaged = true; \
-      name          = Central; \
-      location      = ~/.bnd/shacache; \
-      index         = ${build}/central.json
-	        
--plugin.02.Release: \
-    aQute.bnd.deployer.repository.LocalIndexedRepo; \
-      name          = Release ; \
-      pretty        = true ; \
-      local         = ${build}/release
-
--plugin.03.Local: \
+-plugin.01.Local: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
       name          = Local ; \
       pretty        = true ; \
       local         = ${build}/local
 
--plugin.04.Rest: \
-	aQute.bnd.deployer.repository.FixedIndexedRepo; \
-	  name          = Rest; \
-	  locations     = http://hstaudacher.github.io/osgi-jax-rs-connector/index.xml.gz
-  
+-plugin.02.Release: \
+    aQute.bnd.deployer.repository.LocalIndexedRepo; \
+      name          = Release ; \
+      pretty        = true ; \
+      local         = ${def;releaseRepo;${build}/release}
+
+-plugin.03.Bnd: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+	  name = "Bnd"; \
+	  releaseUrls=https://repo1.maven.org/maven2/; \
+	  pom=${build}/ext/bnd.xml
+
+-plugin.04.Felix: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+	  name = "Felix"; \
+	  releaseUrls=https://repo1.maven.org/maven2/; \
+	  pom=${build}/ext/felix.xml
+
+-plugin.05.Apache: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+	  name = "Apache"; \
+	  releaseUrls=https://repo1.maven.org/maven2/; \
+	  pom=${build}/ext/apache.xml
+
+-plugin.06.Misc: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+	  name = "Misc"; \
+	  releaseUrls=https://repo1.maven.org/maven2/; \
+	  pom=${build}/ext/misc.xml
+
+-plugin.07.Jackson: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+	  name = "Jackson"; \
+	  releaseUrls=https://repo1.maven.org/maven2/; \
+	  pom=${build}/ext/jackson.xml
+
+-plugin.08.Rest: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+	  name = "Rest"; \
+	  releaseUrls=https://repo1.maven.org/maven2/; \
+	  pom=${build}/ext/rest.xml
+
 -plugin.10.Libs: \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 	  name          = Libs; \
@@ -93,13 +113,13 @@ test-cases: 			${classes;NAMED;Test*}
  	aQute.bnd.deployer.repository.FixedIndexedRepo; \
  	  name          = eMeta; \
  	  locations     = http://BryanHunt.github.io/releases/eMeta/index.xml.gz
- 	  
+
 -plugin.13.eMongo: \
  	aQute.bnd.deployer.repository.FixedIndexedRepo; \
  	  name          = eMongo; \
  	  locations     = http://BryanHunt.github.io/releases/eMongo/index.xml.gz
 
-# Temporary bug fix for bndtools 
+# Temporary bug fix for bndtools
 # Java 1.8
 -runsystempackages.bugfix = \
  javax.annotation.processing;version=0,\

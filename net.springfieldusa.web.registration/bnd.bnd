@@ -10,7 +10,6 @@ Bundle-Version: 1.0.2.${tstamp}
 	javax.ws.rs-api;version=2.0,\
 	osgi.annotation;version=6.0,\
 	osgi.cmpn;version=6.0,\
-	javax.annotation-api;version=1.2,\
 	com.eclipsesource.jaxrs.swagger-all;version=1.5,\
 	net.springfieldusa.web;version=latest
 Private-Package:  \
