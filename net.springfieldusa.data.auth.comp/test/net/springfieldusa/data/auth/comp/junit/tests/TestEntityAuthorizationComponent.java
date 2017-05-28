@@ -35,6 +35,7 @@ public class TestEntityAuthorizationComponent
   private EntityObject dataObject;
   private Collection<EntityObject> dataObjects;
   
+  @SuppressWarnings("restriction")
   @Before
   public void setUp() throws Exception
   {

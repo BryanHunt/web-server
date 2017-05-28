@@ -51,6 +51,7 @@ public class TestEntitySecurityProviderComponent
     assertTrue(entitySecurityProviderComponent.getObjectSecurity(dataObject).isOwner(principal.getName()));
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testSetObjectSecurityUserProvidedSecurity() throws ApplicationException, SecurityException
   {
