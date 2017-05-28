@@ -1,14 +1,73 @@
-#-runfw: org.apache.felix.framework;version=5
-#-runee: JavaSE-1.7
-
--runprovidedcapabilities: ${native_capability}
+-runfw: org.apache.felix.framework;version='[5.4.0,5.4.0]'
+-runee: JavaSE-1.8
+-runsystemcapabilities: ${native_capability}
 
 -resolve.effective: active;skip:="osgi.service"
 
--runbundles:\
+-runbundles: \
 	org.apache.felix.gogo.runtime,\
 	org.apache.felix.gogo.shell,\
-	org.apache.felix.gogo.command
+	org.apache.felix.gogo.command,\
+	org.apache.felix.configadmin,\
+	org.apache.felix.http.api,\
+	org.apache.felix.http.jetty,\
+	org.apache.felix.log,\
+	org.apache.felix.metatype,\
+	org.apache.felix.scr,\
+	org.apache.felix.webconsole;version=4.2.14,\
+	org.apache.felix.eventadmin,\
+	org.mongodb.mongo-java-driver;version=3.1.1,\
+	org.eclipselabs.emeta.api,\
+	org.eclipselabs.emongo.api,\
+	org.eclipselabs.emongo.components,\
+	org.eclipselabs.emongo.metatype.api,\
+	org.eclipselabs.emongo.metatype.components,\
+	javax.servlet;version=3.1,\
+	com.eclipsesource.jaxrs.jersey-all,\
+	com.eclipsesource.jaxrs.provider.security,\
+	com.eclipsesource.jaxrs.publisher,\
+	com.eclipsesource.jaxrs.swagger-all;version=1.5.4,\
+	com.fasterxml.jackson.core.jackson-annotations,\
+	com.fasterxml.jackson.core.jackson-core,\
+	com.fasterxml.jackson.core.jackson-databind,\
+	com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider,\
+	com.fasterxml.jackson.jaxrs.jackson-jaxrs-base,\
+	io.jsonwebtoken.jjwt,\
+	net.springfieldusa.app.accounts.registrations;version=latest,\
+	net.springfieldusa.app.accounts.users;version=latest,\
+	net.springfieldusa.comp;version=latest,\
+	net.springfieldusa.credentials.api;version=latest,\
+	net.springfieldusa.credentials.comp;version=latest,\
+	net.springfieldusa.data.api;version=latest,\
+	net.springfieldusa.data.comp;version=latest,\
+	net.springfieldusa.entity.api;version=latest,\
+	net.springfieldusa.groups.api;version=latest,\
+	net.springfieldusa.groups.comp;version=latest,\
+	net.springfieldusa.jwt.api;version=latest,\
+	net.springfieldusa.jwt.jjwt.comp;version=latest,\
+	net.springfieldusa.jwt.secret.dev.comp;version=latest,\
+	net.springfieldusa.password.api;version=latest,\
+	net.springfieldusa.password.comp;version=latest,\
+	net.springfieldusa.registration.api;version=latest,\
+	net.springfieldusa.registration.comp;version=latest,\
+	net.springfieldusa.security.api;version=latest,\
+	net.springfieldusa.security.comp;version=latest,\
+	net.springfieldusa.storage.api;version=latest,\
+	net.springfieldusa.storage.mongodb.comp;version=latest,\
+	net.springfieldusa.users.api;version=latest,\
+	net.springfieldusa.users.comp;version=latest,\
+	net.springfieldusa.web;version=latest,\
+	net.springfieldusa.web.json;version=latest,\
+	net.springfieldusa.web.jwt;version=latest,\
+	net.springfieldusa.web.registration;version=latest,\
+	net.springfieldusa.web.security.jwt;version=latest,\
+	net.springfieldusa.web.storage;version=latest,\
+	net.springfieldusa.data.auth.comp;version=latest,\
+	com.eclipsesource.jaxrs.provider.swagger,\
+	net.springfieldusa.web.documents;version=latest,\
+	org.apache.commons.fileupload;version=1.3.2,\
+	org.apache.commons.io;version=2.2.0,\
+	org.apache.geronimo.bundles.json;version=20090211.0.0
 
 -runrequires:\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
