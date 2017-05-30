@@ -1,4 +1,4 @@
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: 1.0.1.${tstamp}
 -buildpath: \
 	com.eclipsesource.jaxrs.jersey-all,\
 	com.fasterxml.jackson.core.jackson-core,\

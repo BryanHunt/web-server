@@ -11,7 +11,7 @@
 	${junit}, \
 	net.springfieldusa.credentials.api;version=latest
 
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: 1.0.1.${tstamp}
 Private-Package: net.springfieldusa.data.auth.comp
 -dsannotations: *
 -dsannotations-options: inherit

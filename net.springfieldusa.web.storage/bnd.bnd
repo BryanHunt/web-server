@@ -14,7 +14,7 @@
 -testpath: \
 	${junit}
 
-Bundle-Version: 1.0.4.${tstamp}
+Bundle-Version: 1.1.0.${tstamp}
 -dsannotations: *
 -dsannotations-options: inherit
 Export-Package: net.springfieldusa.web.storage

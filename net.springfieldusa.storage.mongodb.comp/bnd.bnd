@@ -1,4 +1,4 @@
-Bundle-Version: 1.0.3.${tstamp}
+Bundle-Version: 1.0.4.${tstamp}
 -buildpath: \
 	net.springfieldusa.comp;version=latest,\
 	org.eclipselabs.emongo.api;version=2.0,\

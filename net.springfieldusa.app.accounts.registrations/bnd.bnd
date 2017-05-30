@@ -11,7 +11,7 @@
 -testpath: \
 	${junit}
 
-Bundle-Version: 1.0.0.${tstamp}
+Bundle-Version: 1.0.1.${tstamp}
 Private-Package: net.springfieldusa.app.accounts.registrations
 -dsannotations: *
 -dsannotations-options: inherit
