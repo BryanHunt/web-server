@@ -100,7 +100,7 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
   }
 
   @Override
-  public boolean isUpdateAuthorizedFor(Principal principal, String collection, EntityObject object)
+  public boolean isUpdateAuthorizedFor(Principal principal, String collection, EntityObject updatedObject, EntityObject storedObject)
   {
     if (principal == null)
       return false;
@@ -110,7 +110,7 @@ public class EntityAuthorizationComponent extends AbstractComponent implements E
       if (securityService.authorizeForRole(principal, adminGroup))
         return true;
 
-      ObjectSecurity security = securityProvider.getObjectSecurity(object);
+      ObjectSecurity security = securityProvider.getObjectSecurity(storedObject);
 
       if (security == null)
         return missingSecurityAuthorization;

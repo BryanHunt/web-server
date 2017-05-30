@@ -14,7 +14,7 @@
 	org.apache.felix.log,\
 	org.apache.felix.metatype,\
 	org.apache.felix.scr,\
-	org.apache.felix.webconsole;version=4.2.14,\
+	org.apache.felix.webconsole,\
 	org.apache.felix.eventadmin,\
 	org.mongodb.mongo-java-driver;version=3.1.1,\
 	org.eclipselabs.emeta.api,\

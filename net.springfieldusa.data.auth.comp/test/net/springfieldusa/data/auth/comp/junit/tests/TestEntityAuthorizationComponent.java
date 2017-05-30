@@ -293,7 +293,7 @@ public class TestEntityAuthorizationComponent
   {
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(null, "collection", dataObject));
+    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(null, "collection", dataObject, dataObject));
   }
 
   @Test
@@ -303,7 +303,7 @@ public class TestEntityAuthorizationComponent
     when(securityService.authorizeForRole(principal, "admin")).thenReturn(true);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
 
   @Test
@@ -315,7 +315,7 @@ public class TestEntityAuthorizationComponent
     properties.put("missingSecurityAuthorization", true);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
 
   @Test
@@ -327,7 +327,7 @@ public class TestEntityAuthorizationComponent
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
   
   @Test
@@ -341,7 +341,7 @@ public class TestEntityAuthorizationComponent
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
   
   @Test
@@ -355,7 +355,7 @@ public class TestEntityAuthorizationComponent
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
 
   @Test
@@ -375,7 +375,7 @@ public class TestEntityAuthorizationComponent
     properties.put("missingSecurityAuthorization", false);
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertTrue(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
   
   @Test
@@ -386,7 +386,7 @@ public class TestEntityAuthorizationComponent
     
     entityAuthorizationComponent.activate(aQute.lib.converter.Converter.cnv(Config.class, properties));
     
-    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject));
+    assertFalse(entityAuthorizationComponent.isUpdateAuthorizedFor(principal, "collection", dataObject, dataObject));
   }
   
   //--- Test delete object ------------------------------------------------------------------------
@@ -495,7 +495,7 @@ public class TestEntityAuthorizationComponent
   
   private ObjectSecurity setOwner(EntityObject entity, String owner) throws ApplicationException
   {
-    entitySecurityProviderComponent.setObjectSecurity(entity, new Principal()
+    entitySecurityProviderComponent.createObjectSecurity(entity, new Principal()
     {
       @Override
       public String getName()

@@ -7,5 +7,5 @@ import net.springfieldusa.entity.EntityObject;
 
 public interface EntitySecurityProvider
 {
-  void setObjectSecurity(EntityObject data, Principal principal) throws ApplicationException;
+  void createObjectSecurity(EntityObject data, Principal principal) throws ApplicationException;
 }

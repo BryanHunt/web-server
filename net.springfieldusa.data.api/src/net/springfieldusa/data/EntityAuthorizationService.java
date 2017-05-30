@@ -21,6 +21,6 @@ public interface EntityAuthorizationService
   boolean isCreateAuthorizedFor(Principal principal, String collection, EntityObject object);
   boolean isRetrieveAuthorizedFor(Principal principal, String collection, EntityObject object);
   boolean isRetrieveAuthorizedFor(Principal principal, String collection, Collection<? extends EntityObject> objects);
-  boolean isUpdateAuthorizedFor(Principal principal, String collection, EntityObject object);
+  boolean isUpdateAuthorizedFor(Principal principal, String collection, EntityObject updatedObject, EntityObject storedObject);
   boolean isDeleteAuthorizedFor(Principal principal, String collection, EntityObject object);  
 }

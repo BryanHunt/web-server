@@ -30,7 +30,7 @@ public class UnsecureApplicationDataComponent extends AbstractComponent implemen
   @Override
   public <T extends EntityObject> T create(Principal principal, String collection, T data) throws DuplicateIdException, ApplicationException
   {
-    securityProvider.setObjectSecurity(data, principal);
+    securityProvider.createObjectSecurity(data, principal);
 
     DataProcessor dataProcessor = dataProcessors.get(collection);
     T processedData = dataProcessor != null ? dataProcessor.handleCreate(principal, data) : data;

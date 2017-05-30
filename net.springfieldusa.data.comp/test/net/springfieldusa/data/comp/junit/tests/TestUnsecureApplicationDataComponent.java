@@ -63,7 +63,7 @@ public class TestUnsecureApplicationDataComponent
 
     assertThat(unsecureApplicationDataComponent.create(principal, COLLECTION, dataObject), is(sameInstance(dataObject)));
     verify(storageService).create(COLLECTION, dataObject);
-    verify(entitySecurityProvider).setObjectSecurity(dataObject, principal);
+    verify(entitySecurityProvider).createObjectSecurity(dataObject, principal);
     verifyZeroInteractions(dataProcessor);
   }
 
@@ -78,7 +78,7 @@ public class TestUnsecureApplicationDataComponent
     assertThat(unsecureApplicationDataComponent.create(principal, COLLECTION, dataObject), is(sameInstance(dataObject)));
     verify(dataProcessor).handleCreate(principal, dataObject);
     verify(storageService).create(COLLECTION, dataObject);
-    verify(entitySecurityProvider).setObjectSecurity(dataObject, principal);
+    verify(entitySecurityProvider).createObjectSecurity(dataObject, principal);
   }
   
   @Test

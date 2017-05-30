@@ -157,7 +157,9 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   @Override
   public <T extends EntityObject> long update(Principal principal, String collection, T data) throws ApplicationException, AuthorizationException
   {
-    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data))
+    EntityObject storedObject = applicationDataService.retrieve(principal, collection, data.getId());
+    
+    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data, storedObject))
       throw new AuthorizationException();
     
     return applicationDataService.update(principal, collection, data);
@@ -166,7 +168,9 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   @Override
   public <T extends EntityObject> long update(Principal principal, String collection, String query, T data) throws ApplicationException, AuthorizationException
   {
-    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data))
+    EntityObject storedObject = applicationDataService.retrieve(principal, collection, data.getId());
+
+    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data, storedObject))
       throw new AuthorizationException();
     
     return applicationDataService.update(principal, collection, query, data);
@@ -175,7 +179,9 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   @Override
   public <T extends EntityObject> long patch(Principal principal, String collection, T data) throws ApplicationException, AuthorizationException
   {
-    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data))
+    EntityObject storedObject = applicationDataService.retrieve(principal, collection, data.getId());
+
+    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data, storedObject))
       throw new AuthorizationException();
     
     return applicationDataService.patch(principal, collection, data);
@@ -184,7 +190,9 @@ public class SecureApplicationDataComponent extends AbstractComponent implements
   @Override
   public <T extends EntityObject> long patch(Principal principal, String collection, String query, T data) throws ApplicationException, AuthorizationException
   {
-    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data))
+    EntityObject storedObject = applicationDataService.retrieve(principal, collection, data.getId());
+
+    if(!entityAuthorizationService.isUpdateAuthorizedFor(principal, collection, data, storedObject))
       throw new AuthorizationException();
     
     return applicationDataService.patch(principal, collection, data);

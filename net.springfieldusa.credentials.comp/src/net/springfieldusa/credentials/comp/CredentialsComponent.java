@@ -82,7 +82,7 @@ public class CredentialsComponent extends AbstractComponent implements Credentia
   {
     try
     {
-      securityProvider.setObjectSecurity(encryptedCredential, new Principal()
+      securityProvider.createObjectSecurity(encryptedCredential, new Principal()
       {
         @Override
         public String getName()

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MetaData xmlns="http://www.osgi.org/xmlns/metatype/v1.1.0">
 	<OCD name="Entity Authorization" id="net.springfieldusa.data.auth.comp" description="Entity authorization configuration">
-		<AD name="Admin Group" id="adminGroup" type="String" default="admin" description="The admin group name"/>
+		<AD name="Use Meta" id="useMeta" type="Boolean" default="true" description="Store the object security in the entity meta data"/>
+		<AD name="Security Key" id="securityKey" type="String" default="security" description="The attribute key for the security data"/>
 		<AD name="Object Security" id="missingSecurityAuthorization" type="Boolean" default="true" description="Fail if the object security metadata is missing"/>
 	</OCD>
 	<Designate pid="net.springfieldusa.data.auth.comp.EntityAuthorizationComponent">
