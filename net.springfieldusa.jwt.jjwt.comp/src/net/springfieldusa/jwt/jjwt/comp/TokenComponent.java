@@ -136,7 +136,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
     this.secretProvider = secretProvider;
   }
   
-  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+  @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
   public void bindClaimsProvider(ClaimsProvider claimsProvider)
   {
     claimsProviders.add(claimsProvider);
