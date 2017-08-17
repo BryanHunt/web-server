@@ -11,6 +11,7 @@
 
 package net.springfieldusa.jwt;
 
+import java.security.Principal;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,5 +22,6 @@ import net.springfieldusa.credentials.UnencryptedCredential;
 public interface TokenService
 {
   String createToken(ContainerRequestContext context, HttpServletRequest request, UnencryptedCredential credentials) throws TokenException;
+  String createToken(ContainerRequestContext context, HttpServletRequest request, Principal principal) throws TokenException;
   Map<String, Object> verifyToken(String token) throws TokenException;
 }

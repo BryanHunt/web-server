@@ -58,9 +58,9 @@ public class TokenComponent extends AbstractComponent implements TokenService
   @Override
   public String createToken(ContainerRequestContext context, HttpServletRequest request, UnencryptedCredential credentials) throws TokenException
   {
-    if(credentials == null)
+    if (credentials == null)
       return null;
-    
+
     try
     {
       Principal principal = securityService.authenticate(credentials);
@@ -68,6 +68,20 @@ public class TokenComponent extends AbstractComponent implements TokenService
       if (principal == null)
         return null;
 
+      return createToken(context, request, principal);
+    }
+    catch (SecurityException e)
+    {
+      log(LogService.LOG_DEBUG, "Failed to create JWT token", e);
+      throw new TokenException(e);
+    }
+  }
+
+  @Override
+  public String createToken(ContainerRequestContext context, HttpServletRequest request, Principal principal) throws TokenException
+  {
+    try
+    {
       Collection<String> roles = securityService.getRoles(principal);
 
       Map<String, Object> claims = new HashMap<>();

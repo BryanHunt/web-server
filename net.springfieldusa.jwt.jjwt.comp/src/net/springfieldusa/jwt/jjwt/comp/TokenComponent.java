@@ -52,9 +52,10 @@ public class TokenComponent extends AbstractComponent implements TokenService
   public @interface Config
   {
     long tokenExpirationAmount() default 1;
+
     String tokenExpirationUnit() default "DAYS";
   }
- 
+
   private long tokenExpirationAmount;
   private ChronoUnit tokenExpirationUnit;
 
@@ -77,9 +78,9 @@ public class TokenComponent extends AbstractComponent implements TokenService
   @Override
   public String createToken(ContainerRequestContext context, HttpServletRequest request, UnencryptedCredential credentials) throws TokenException
   {
-    if(credentials == null)
+    if (credentials == null)
       return null;
-    
+
     try
     {
       Principal principal = securityService.authenticate(credentials);
@@ -87,14 +88,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
       if (principal == null)
         return null;
 
-      Map<String, Object> claims = new HashMap<>();
-      claims.put("userId", principal.getName());
-      claims.put("exp", Instant.now().plus(tokenExpirationAmount, tokenExpirationUnit).getEpochSecond());
-      
-      for(ClaimsProvider claimsProvider : claimsProviders)
-        claimsProvider.addClaims(claims, context, request, principal);
-      
-      return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, key).compact();
+      return createToken(context, request, principal);
     }
     catch (SecurityException e)
     {
@@ -104,10 +98,23 @@ public class TokenComponent extends AbstractComponent implements TokenService
   }
 
   @Override
+  public String createToken(ContainerRequestContext context, HttpServletRequest request, Principal principal) throws TokenException
+  {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("userId", principal.getName());
+    claims.put("exp", Instant.now().plus(tokenExpirationAmount, tokenExpirationUnit).getEpochSecond());
+  
+    for (ClaimsProvider claimsProvider : claimsProviders)
+      claimsProvider.addClaims(claims, context, request, principal);
+  
+    return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, key).compact();
+  }
+
+  @Override
   public Map<String, Object> verifyToken(String token) throws TokenException
   {
     // TODO : look at adding a token cache
-    
+
     try
     {
       return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
@@ -135,13 +142,13 @@ public class TokenComponent extends AbstractComponent implements TokenService
   {
     this.secretProvider = secretProvider;
   }
-  
+
   @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
   public void bindClaimsProvider(ClaimsProvider claimsProvider)
   {
     claimsProviders.add(claimsProvider);
   }
-  
+
   public void unbindClaimsProvider(ClaimsProvider claimsProvider)
   {
     claimsProviders.remove(claimsProvider);
