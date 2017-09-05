@@ -9,7 +9,7 @@
  *    Bryan Hunt - initial API and implementation
  *******************************************************************************/
 
-package net.springfieldusa.web.jwt;
+package net.springfieldusa.web.jwt.resource;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

@@ -9,11 +9,14 @@
  *    Bryan Hunt - initial API and implementation
  *******************************************************************************/
 
-package net.springfieldusa.web.jwt;
+package net.springfieldusa.web.jwt.resource;
 
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -29,6 +32,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.log.LogService;
 
 import io.swagger.annotations.Api;
@@ -39,6 +44,7 @@ import net.springfieldusa.credentials.UnencryptedCredential;
 import net.springfieldusa.jwt.TokenService;
 import net.springfieldusa.security.SecurityService;
 import net.springfieldusa.web.WebResource;
+import net.springfieldusa.web.jwt.ClaimsProvider;
 
 @Path("/auth")
 @Api(value = "auth")
@@ -49,6 +55,7 @@ public class TokenResource extends WebResource
 {
   private volatile SecurityService securityService;
   private volatile TokenService tokenService;
+  private Set<ClaimsProvider> claimsProviders = new CopyOnWriteArraySet<>();
 
   @POST
   @ApiOperation(value = "Create an authentication token")
@@ -62,6 +69,11 @@ public class TokenResource extends WebResource
       if (principal == null)
         throw new NotAuthorizedException("Token");
 
+      Map<String, Object> claims = new HashMap<>();
+      
+      for(ClaimsProvider claimsProvider : claimsProviders)
+        claimsProvider.addClaims(claims, context, principal);
+      
       return new Token(credentials.getUserId(), tokenService.createToken(principal, Collections.emptyMap()));
     }
     catch (WebApplicationException e)
@@ -85,5 +97,16 @@ public class TokenResource extends WebResource
   public void bindTokenService(TokenService tokenService, Map<String, Object> properties)
   {
     this.tokenService = tokenService;
+  }
+  
+  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
+  public void bindClaimsProvider(ClaimsProvider claimsProvider)
+  {
+    this.claimsProviders.add(claimsProvider);
+  }
+  
+  public void unbindClaimsProvider(ClaimsProvider claimsProvider)
+  {
+    this.claimsProviders.remove(claimsProvider);
   }
 }
