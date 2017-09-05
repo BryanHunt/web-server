@@ -1,14 +1,8 @@
 -buildpath: \
-	osgi.annotation;version=6.0,\
-	osgi.core;version=6.0,\
 	osgi.cmpn;version=6.0,\
 	net.springfieldusa.jwt.api;version=latest,\
 	net.springfieldusa.comp;version=latest,\
-	net.springfieldusa.credentials.api;version=latest,\
-	net.springfieldusa.security.api;version=latest,\
-	io.jsonwebtoken.jjwt;version=0.6,\
-	javax.ws.rs-api;version=2.0,\
-	javax.servlet;version=3.1
+	io.jsonwebtoken.jjwt;version=0.6
 
 -testpath: \
 	${junit}, \
@@ -16,7 +10,7 @@
 	com.fasterxml.jackson.core.jackson-databind;version=2.5.0, \
 	com.fasterxml.jackson.core.jackson-annotations;version=2.5.0	
 
-Bundle-Version: 3.0.6.${tstamp}
+Bundle-Version: 4.0.0.${tstamp}
 Private-Package: net.springfieldusa.jwt.jjwt.comp
 -dsannotations: *
 -dsannotations-options: inherit

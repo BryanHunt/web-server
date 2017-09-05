@@ -11,6 +11,8 @@
 
 package net.springfieldusa.web.jwt;
 
+import java.security.Principal;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.springfieldusa.credentials.UnencryptedCredential;
 import net.springfieldusa.jwt.TokenService;
+import net.springfieldusa.security.SecurityService;
 import net.springfieldusa.web.WebResource;
 
 @Path("/auth")
@@ -44,6 +47,7 @@ import net.springfieldusa.web.WebResource;
 @Component(service = TokenResource.class)
 public class TokenResource extends WebResource
 {
+  private volatile SecurityService securityService;
   private volatile TokenService tokenService;
 
   @POST
@@ -53,12 +57,12 @@ public class TokenResource extends WebResource
   {
     try
     {
-      String token = tokenService.createToken(context, request, credentials);
-
-      if (token == null)
+      Principal principal = securityService.authenticate(credentials);
+      
+      if (principal == null)
         throw new NotAuthorizedException("Token");
 
-      return new Token(credentials.getUserId(), token);
+      return new Token(credentials.getUserId(), tokenService.createToken(principal, Collections.emptyMap()));
     }
     catch (WebApplicationException e)
     {
@@ -71,6 +75,12 @@ public class TokenResource extends WebResource
     }
   }
 
+  @Reference(unbind = "-")
+  public void bindSecurityService(SecurityService securityService)
+  {
+    this.securityService = securityService;
+  }
+  
   @Reference(unbind = "-")
   public void bindTokenService(TokenService tokenService, Map<String, Object> properties)
   {

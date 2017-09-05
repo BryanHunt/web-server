@@ -17,18 +17,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.container.ContainerRequestContext;
 
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.log.LogService;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,16 +30,12 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import net.springfieldusa.comp.AbstractComponent;
-import net.springfieldusa.credentials.UnencryptedCredential;
-import net.springfieldusa.jwt.ClaimsProvider;
 import net.springfieldusa.jwt.EncryptionSecretProvider;
 import net.springfieldusa.jwt.TokenException;
 import net.springfieldusa.jwt.TokenExpiredException;
 import net.springfieldusa.jwt.TokenService;
-import net.springfieldusa.security.SecurityException;
-import net.springfieldusa.security.SecurityService;
 
-@Component(service = TokenService.class)
+@Component
 public class TokenComponent extends AbstractComponent implements TokenService
 {
   public @interface Config
@@ -59,12 +48,9 @@ public class TokenComponent extends AbstractComponent implements TokenService
   private long tokenExpirationAmount;
   private ChronoUnit tokenExpirationUnit;
 
-  private volatile SecurityService securityService;
   private volatile EncryptionSecretProvider secretProvider;
-  private Set<ClaimsProvider> claimsProviders = new CopyOnWriteArraySet<>();
   private Key key;
 
-  @Activate
   public void activate(Config config)
   {
     tokenExpirationAmount = config.tokenExpirationAmount();
@@ -76,37 +62,14 @@ public class TokenComponent extends AbstractComponent implements TokenService
   }
 
   @Override
-  public String createToken(ContainerRequestContext context, HttpServletRequest request, UnencryptedCredential credentials) throws TokenException
+  public String createToken(Principal principal, Map<String, Object> claims) throws TokenException
   {
-    if (credentials == null)
-      return null;
-
-    try
-    {
-      Principal principal = securityService.authenticate(credentials);
-
-      if (principal == null)
-        return null;
-
-      return createToken(context, request, principal);
-    }
-    catch (SecurityException e)
-    {
-      log(LogService.LOG_DEBUG, "Failed to create JWT token", e);
-      throw new TokenException(e);
-    }
-  }
-
-  @Override
-  public String createToken(ContainerRequestContext context, HttpServletRequest request, Principal principal) throws TokenException
-  {
-    Map<String, Object> claims = new HashMap<>();
+    if(claims == null)
+      claims = new HashMap<>();
+    
     claims.put("userId", principal.getName());
-    claims.put("exp", Instant.now().plus(tokenExpirationAmount, tokenExpirationUnit).getEpochSecond());
-  
-    for (ClaimsProvider claimsProvider : claimsProviders)
-      claimsProvider.addClaims(claims, context, request, principal);
-  
+    claims.put("exp", Instant.now().plus(tokenExpirationAmount, tokenExpirationUnit).getEpochSecond());  
+    
     return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, key).compact();
   }
 
@@ -132,25 +95,8 @@ public class TokenComponent extends AbstractComponent implements TokenService
   }
 
   @Reference(unbind = "-")
-  public void bindSecurityService(SecurityService securityService)
-  {
-    this.securityService = securityService;
-  }
-
-  @Reference(unbind = "-")
   public void bindEncryptionSecretProvider(EncryptionSecretProvider secretProvider)
   {
     this.secretProvider = secretProvider;
-  }
-
-  @Reference(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-  public void bindClaimsProvider(ClaimsProvider claimsProvider)
-  {
-    claimsProviders.add(claimsProvider);
-  }
-
-  public void unbindClaimsProvider(ClaimsProvider claimsProvider)
-  {
-    claimsProviders.remove(claimsProvider);
   }
 }
