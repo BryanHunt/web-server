@@ -21,12 +21,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.osgi.service.component.annotations.*;
+import org.osgi.service.component.annotations.Component;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.springfieldusa.web.WebResource;
-import net.springfieldusa.web.WebResourceUsageLogService;
 
 @Api(value = "ping")
 @Path("/ping")
@@ -38,20 +37,6 @@ public class PingResource extends WebResource
   @ApiOperation(value = "Endpoint to check server health")
   public String ping(@Context HttpServletRequest request, @Context SecurityContext securityContext, @Context UriInfo uriInfo)
   {
-    recordGet(request, uriInfo, securityContext.getUserPrincipal(), 200, 0);
     return Calendar.getInstance().getTime().toString();
-  }
-
-  @Override
-  @Reference(cardinality = ReferenceCardinality.OPTIONAL, policy = ReferencePolicy.DYNAMIC)
-  public void bindWebResourceUsageLogService(WebResourceUsageLogService webResourceUsageLogService)
-  {
-    super.bindWebResourceUsageLogService(webResourceUsageLogService);
-  }
-
-  @Override
-  public void unbindWebResourceUsageLogService(WebResourceUsageLogService webResourceUsageLogService)
-  {
-    super.unbindWebResourceUsageLogService(webResourceUsageLogService);
   }
 }
