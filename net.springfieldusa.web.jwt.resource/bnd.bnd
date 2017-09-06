@@ -13,7 +13,7 @@
 -testpath: \
 	${junit}
 
-Bundle-Version: 4.0.0.${tstamp}
+Bundle-Version: 4.0.1.${tstamp}
 Private-Package: net.springfieldusa.web.jwt.resource
 -dsannotations: *
 -dsannotations-options: inherit

@@ -74,7 +74,7 @@ public class TokenResource extends WebResource
       for(ClaimsProvider claimsProvider : claimsProviders)
         claimsProvider.addClaims(claims, context, principal);
       
-      return new Token(credentials.getUserId(), tokenService.createToken(principal, Collections.emptyMap()));
+      return new Token(credentials.getUserId(), tokenService.createToken(principal, claims));
     }
     catch (WebApplicationException e)
     {

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogService;
@@ -51,6 +52,7 @@ public class TokenComponent extends AbstractComponent implements TokenService
   private volatile EncryptionSecretProvider secretProvider;
   private Key key;
 
+  @Activate
   public void activate(Config config)
   {
     tokenExpirationAmount = config.tokenExpirationAmount();

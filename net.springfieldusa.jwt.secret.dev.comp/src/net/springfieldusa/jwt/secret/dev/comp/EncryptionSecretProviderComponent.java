@@ -15,7 +15,7 @@ import org.osgi.service.component.annotations.*;
 
 import net.springfieldusa.jwt.EncryptionSecretProvider;
 
-@Component(service = EncryptionSecretProvider.class)
+@Component(service = EncryptionSecretProvider.class, immediate = true)
 public class EncryptionSecretProviderComponent implements EncryptionSecretProvider
 {
   @Override
